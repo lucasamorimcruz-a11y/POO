@@ -1,6 +1,7 @@
 package dados;
 
 public class Reserva {
+
     private int numReserva;
     private String dataVoo;
     private String horaVoo;
@@ -8,12 +9,9 @@ public class Reserva {
     private String classeVoo;
     private boolean idaEVolta;
     private int poltrona;
-    private Reserva volta;
+    private Cidade origem;
     private Cidade destino;
-
-    public boolean getIdaEVolta(){
-        return this.idaEVolta;
-    }
+    private Reserva volta;
 
     public int getNumReserva() {
         return numReserva;
@@ -59,10 +57,6 @@ public class Reserva {
         return idaEVolta;
     }
 
-    public void setIdaEVolta(boolean idaEVolta) {
-        this.idaEVolta = idaEVolta;
-    }
-
     public int getPoltrona() {
         return poltrona;
     }
@@ -71,13 +65,12 @@ public class Reserva {
         this.poltrona = poltrona;
     }
 
-    public Reserva getReserva() {
-        return volta;
+    public Cidade getOrigem() {
+        return origem;
     }
 
-    public void setReserva(Reserva reserva) {
-        this.idaEVolta = true;
-        this.volta = reserva;
+    public void setOrigem(Cidade origem) {
+        this.origem = origem;
     }
 
     public Cidade getDestino() {
@@ -94,33 +87,44 @@ public class Reserva {
 
     public void setVolta(Reserva volta) {
         this.volta = volta;
+        this.idaEVolta = true;
+    }
+
+    public void excluirVolta() {
+        this.volta = null;
+        this.idaEVolta = false;
     }
 
     @Override
     public String toString() {
-        String info = "Reserva nº: " + numReserva +
-                "\nData do Voo: " + dataVoo +
-                "\nHora do Voo: " + horaVoo +
-                "\nPreço: R$ " + preco +
-                "\nClasse: " + classeVoo +
-                "\nPoltrona: " + poltrona +
-                "\nIda e Volta: " + (idaEVolta ? "Sim" : "Não");
-
-        if (destino != null) {
-            info += "\nDestino: " + destino.toString();
-        }
-
-        if (volta != null) {
-            info += "\n--- Voo de Volta ---\n" + volta.toString();
-        }
-        return info;
+        return  "Reserva #" + numReserva +
+                " | Data: " + dataVoo +
+                " | Hora: " + horaVoo +
+                " | Poltrona: " + poltrona +
+                " | Classe: " + classeVoo +
+                " | Preço: R$ " + preco +
+                " | Ida e Volta: " + (idaEVolta ? "Sim" : "Não");
     }
     @Override
-    public boolean equals (Object obj){
-        if (obj instanceof Reserva){
-            return this.numReserva == ((Reserva) obj).getNumReserva() && this.dataVoo == ((Reserva) obj).getDataVoo() && this.horaVoo == ((Reserva) obj).horaVoo && this.preco == ((Reserva) obj).getPreco() && this.classeVoo == ((Reserva) obj).getClasseVoo() && this.idaEVolta == ((Reserva) obj).getIdaEVolta() && this.poltrona == ((Reserva) obj).getPoltrona();
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        return false;
+        if (!(obj instanceof Reserva)) {
+            return false;
+        }
+        Reserva outra = (Reserva) obj;
+        return this.numReserva == outra.numReserva
+                && this.dataVoo != null
+                && this.dataVoo.equals(outra.dataVoo)
+                && this.horaVoo != null
+                && this.horaVoo.equals(outra.horaVoo)
+                && Float.compare(this.preco, outra.preco) == 0
+                && this.classeVoo != null
+                && this.classeVoo.equals(outra.classeVoo)
+                && this.idaEVolta == outra.idaEVolta
+                && this.poltrona == outra.poltrona
+                && java.util.Objects.equals(this.origem, outra.origem)
+                && java.util.Objects.equals(this.destino, outra.destino);
     }
-
 }
