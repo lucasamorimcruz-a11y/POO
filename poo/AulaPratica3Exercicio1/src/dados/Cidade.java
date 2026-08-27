@@ -22,6 +22,16 @@ public class Cidade {
 
     @Override
     public String toString() {
-        return "Nome: " + this.nome +  ", Estado: "  + this.estado;
+        return nome + " - " + estado;
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof Cidade) {
+            Cidade c = (Cidade) o;
+            if (this.nome.equals(c.getNome()) && this.estado.equals(c.getEstado())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

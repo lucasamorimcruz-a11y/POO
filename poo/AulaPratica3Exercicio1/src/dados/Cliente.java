@@ -3,22 +3,21 @@ package dados;
 import java.util.ArrayList;
 
 public class Cliente {
-    private int CPF;
+    private String CPF;
     private String nome;
     private String endereco;
     private int telefone;
-    private ArrayList<Reserva> reservas = new ArrayList<>();
-    public void reservarIda(Reserva reserva){
-        this.reservas.add(reserva);
-    }
-    public void reservarVolta(Reserva ida, Reserva volta){
+    private ArrayList<Reserva> reservas;
 
+    public Cliente (){
+        reservas = new ArrayList<>();
     }
-    public int getCPF() {
+
+    public String getCPF() {
         return CPF;
     }
 
-    public void setCPF(int CPF) {
+    public void setCPF(String CPF) {
         this.CPF = CPF;
     }
 
@@ -53,9 +52,33 @@ public class Cliente {
     public void setReservas(ArrayList<Reserva> reservas) {
         this.reservas = reservas;
     }
+    public void reservarIda(Reserva reserva){
+        this.reservas.add(reserva);
+    }
+    public void reservarVolta (Reserva ida, Reserva volta){
+        ida.setVolta(volta);
+    }
+    public void decadastrarReserva (Reserva reserva){
+        this.reservas.remove(reserva);
+    }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Cliente{" +
+                "CPF=" + CPF +
+                ", nome='" + nome + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", telefone=" + telefone +
+                ", reservas=" + reservas +
+                '}';
     }
+    public boolean equals (Object o){
+        if (o instanceof Cliente){
+            Cliente c = (Cliente) o;
+            return this.CPF.equals(c.getCPF());
+        }
+        return false;
+    }
+
+
 }
