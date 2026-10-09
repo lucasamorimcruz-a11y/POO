@@ -1,6 +1,11 @@
 package dados;
 
+import enums.TipoCliente;
+
 public class Cliente  {
     private Pessoa pessoa;
-    private float limiteDeCredito;
+    private TipoCliente tipoCliente;
+    float limiteDeCredito;
+
+
 }

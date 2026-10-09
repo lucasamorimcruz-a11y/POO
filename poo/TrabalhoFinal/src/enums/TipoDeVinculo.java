@@ -1,10 +1,10 @@
-package dados;
+package enums;
 
-public enum Vinculo {
+public enum TipoDeVinculo {
     CLT ("CLT"), PJ ("PJ");
     private String vinculo;
 
-    Vinculo (String vinculo){
+    TipoDeVinculo(String vinculo){
         this.vinculo = vinculo;
     }
 

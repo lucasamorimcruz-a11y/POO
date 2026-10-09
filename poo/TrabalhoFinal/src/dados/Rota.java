@@ -1,5 +1,7 @@
 package dados;
 
+import enums.Status;
+
 import java.util.ArrayList;
 
 public class Rota {
@@ -10,6 +12,7 @@ public class Rota {
     private ArrayList<Pedido> pedidos;
     private float quilometragemInicial;
     private float quilometragemFinal;
+    private Status status;
 
     public Rota(int numero, String data, Veiculo veiculoAlocado, Motorista motoristaResponsavel, ArrayList<Pedido> pedidos, float quilometragemInicial, float quilometragemFinal) {
         this.numero = numero;

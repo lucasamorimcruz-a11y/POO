@@ -1,4 +1,4 @@
-package dados;
+package enums;
 
 public enum TipoDeServico {
     ECONOMICO ("Econômico"), EXPRESSO("Expresso"), AGENDADO("Agendado");

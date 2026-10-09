@@ -1,8 +1,13 @@
 package dados;
 
+import enums.Periodo;
+import enums.Status;
+
+import java.util.Date;
+
 public class Pedido {
     private int numero;
-    private String dataDeSolicitacao;
+    private Date dataDeSolicitacao;
     private Cliente clienteDoPedido;
     private Endereco enderecoDeColeta;
     private String dataAgendadaPraColeta;
@@ -18,7 +23,7 @@ public class Pedido {
     private String formaDePagamento;
     private Status status;
 
-    public Pedido(int numero, String dataDeSolicitacao, Cliente clienteDoPedido, Endereco enderecoDeColeta, String dataAgendadaPraColeta, Periodo periodo, String descricaoDaCarga, float pesoTotal, float volumeTotal, float valorDaMercadoria, Endereco enderecoDeEntrega, String contatoNoDestino, String prazoDeEntrega, float valorDoFrete, String formaDePagamento, Status status) {
+    public Pedido(int numero, Date dataDeSolicitacao, Cliente clienteDoPedido, Endereco enderecoDeColeta, String dataAgendadaPraColeta, Periodo periodo, String descricaoDaCarga, float pesoTotal, float volumeTotal, float valorDaMercadoria, Endereco enderecoDeEntrega, String contatoNoDestino, String prazoDeEntrega, float valorDoFrete, String formaDePagamento, Status status) {
         this.numero = numero;
         this.dataDeSolicitacao = dataDeSolicitacao;
         this.clienteDoPedido = clienteDoPedido;
@@ -45,11 +50,11 @@ public class Pedido {
         this.numero = numero;
     }
 
-    public String getDataDeSolicitacao() {
+    public Date getDataDeSolicitacao() {
         return dataDeSolicitacao;
     }
 
-    public void setDataDeSolicitacao(String dataDeSolicitacao) {
+    public void setDataDeSolicitacao(Date dataDeSolicitacao) {
         this.dataDeSolicitacao = dataDeSolicitacao;
     }
 

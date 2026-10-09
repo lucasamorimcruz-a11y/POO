@@ -1,5 +1,8 @@
 package dados;
 
+import enums.Status;
+import enums.TipoDeVeiculo;
+
 public class Veiculo {
     private String placa;
     private String marca;
@@ -11,8 +14,9 @@ public class Veiculo {
     private String dataDeAquisicao;
     private Status status;
     private String dataProximaManuntencao;
+    private TipoDeVeiculo tipoDeVeiculo;
 
-    public Veiculo(String placa, String marca, String modelo, String anoDeFabricacao, float capacidadeEmQuilos, float capacidadeEmMetroCubicos, float quilometragemAtual, String dataDeAquisicao, Status status, String dataProximaManuntencao) {
+    public Veiculo(String placa, String marca, String modelo, String anoDeFabricacao, float capacidadeEmQuilos, float capacidadeEmMetroCubicos, float quilometragemAtual, String dataDeAquisicao, Status status, String dataProximaManuntencao, TipoDeVeiculo tipoDeVeiculo) {
         this.placa = placa;
         this.marca = marca;
         this.modelo = modelo;
@@ -23,6 +27,7 @@ public class Veiculo {
         this.dataDeAquisicao = dataDeAquisicao;
         this.status = status;
         this.dataProximaManuntencao = dataProximaManuntencao;
+        this.tipoDeVeiculo = tipoDeVeiculo;
     }
 
     public String getPlaca() {
@@ -103,5 +108,13 @@ public class Veiculo {
 
     public void setDataProximaManuntencao(String dataProximaManuntencao) {
         this.dataProximaManuntencao = dataProximaManuntencao;
+    }
+
+    public TipoDeVeiculo getTipoDeVeiculo() {
+        return tipoDeVeiculo;
+    }
+
+    public void setTipoDeVeiculo(TipoDeVeiculo tipoDeVeiculo) {
+        this.tipoDeVeiculo = tipoDeVeiculo;
     }
 }
