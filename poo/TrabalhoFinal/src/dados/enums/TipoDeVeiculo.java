@@ -1,4 +1,4 @@
-package enums;
+package dados.enums;
 
 public enum TipoDeVeiculo {
     CARRO("Carro"), VAN("Van"), CAMINHAO_GRANDE("Caminhão grande"), CAMINHAO_PEQUENO("Caminhão pequeno");

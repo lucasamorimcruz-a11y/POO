@@ -1,5 +1,5 @@
 
-package enums;
+package dados.enums;
 
 public enum StatusEntrega {
     PENDENTE("Pendente"),

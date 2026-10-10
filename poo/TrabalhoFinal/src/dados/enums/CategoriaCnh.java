@@ -1,4 +1,4 @@
-package enums;
+package dados.enums;
 
 public enum CategoriaCnh {
     A("A"), B("B"), C("C"), D("D"), E("E");

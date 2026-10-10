@@ -1,7 +1,7 @@
 
 package dados;
 
-import enums.TipoDeServico;
+import dados.enums.TipoDeServico;
 
 public class TabelaPreco {
 

@@ -1,7 +1,7 @@
 package dados;
 
-import enums.Status;
-import enums.TipoDeVeiculo;
+import dados.enums.Status;
+import dados.enums.TipoDeVeiculo;
 
 public class Veiculo {
     private String placa;

@@ -1,6 +1,6 @@
 package dados;
 
-import enums.TipoCliente;
+import dados.enums.TipoCliente;
 
 public class Cliente  {
     private Pessoa pessoa;

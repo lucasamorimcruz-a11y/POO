@@ -1,4 +1,4 @@
-package enums;
+package dados.enums;
 
 public enum Situacao {
     ATIVO("Ativo"), AFASTADO("Afastado"), DESLIGADO("Desligado");

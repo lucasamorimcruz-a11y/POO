@@ -1,5 +1,5 @@
 package dados;
-import enums.TipoDeEmbalagem;
+import dados.enums.TipoDeEmbalagem;
 
 public class Itens {
     private TipoDeEmbalagem tipoDeEmbalagem;

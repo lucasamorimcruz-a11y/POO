@@ -1,5 +1,5 @@
 package dados;
-import enums.TipoDeManutencao;
+import dados.enums.TipoDeManutencao;
 import java.util.Date;
 
 public class Manutencao {

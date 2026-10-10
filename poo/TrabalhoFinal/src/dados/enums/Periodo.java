@@ -1,4 +1,4 @@
-package enums;
+package dados.enums;
 
 public enum Periodo {
     MANHA("Manhã"), TARDE ( "Tarde"), NOITE("Noite");

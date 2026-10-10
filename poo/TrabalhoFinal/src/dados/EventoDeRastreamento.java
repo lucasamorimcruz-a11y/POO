@@ -1,6 +1,6 @@
 package dados;
 
-import enums.Eventos;
+import dados.enums.Eventos;
 
 import java.time.LocalTime;
 import java.util.ArrayList;

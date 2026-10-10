@@ -1,8 +1,8 @@
 package dados;
 
-import enums.Periodo;
-import enums.Status;
-import enums.TipoDeServico;
+import dados.enums.Periodo;
+import dados.enums.Status;
+import dados.enums.TipoDeServico;
 
 import java.util.ArrayList;
 import java.util.Date;

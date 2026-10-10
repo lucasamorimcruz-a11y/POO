@@ -1,8 +1,8 @@
 package dados;
 
-import enums.Situacao;
-import enums.TipoDeVeiculo;
-import enums.TipoDeVinculo;
+import dados.enums.Situacao;
+import dados.enums.TipoDeVeiculo;
+import dados.enums.TipoDeVinculo;
 
 import java.util.ArrayList;
 

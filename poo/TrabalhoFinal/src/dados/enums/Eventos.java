@@ -1,4 +1,4 @@
-package enums;
+package dados.enums;
 
 public enum Eventos {
     COLETA_REALIZADA ("Coleta realizada"),

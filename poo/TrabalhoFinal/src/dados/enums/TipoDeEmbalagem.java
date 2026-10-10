@@ -1,5 +1,5 @@
 
-package enums;
+package dados.enums;
 
 public enum TipoDeEmbalagem {
     CAIXA("Caixa"),

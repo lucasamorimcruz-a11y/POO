@@ -2,7 +2,6 @@
 package negocio;
 
 import dados.*;
-import enums.*;
 
 import java.util.ArrayList;
 

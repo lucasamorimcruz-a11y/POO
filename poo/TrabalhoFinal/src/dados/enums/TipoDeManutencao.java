@@ -1,4 +1,4 @@
-package enums;
+package dados.enums;
 
 public enum TipoDeManutencao {
     PREVENTINVA ("Preventiva"), CORRETIVA("Corretiva");
