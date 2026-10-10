@@ -6,16 +6,15 @@ import enums.TipoDeVinculo;
 
 import java.util.ArrayList;
 
-public class Motorista  {
-    private PessoaFisica pessoaFisica;
+public class Motorista extends PessoaFisica {
     private Cnh cnh;
     private String dataDeAdmissao;
     private TipoDeVinculo vinculo;
     private Situacao situacao;
     private ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis;
 
-    public Motorista (PessoaFisica pessoaFisica, Cnh cnh, String dataDeAdmissao, TipoDeVinculo vinculo, Situacao situacao, ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis){
-        this.pessoaFisica = pessoaFisica;
+    public Motorista (String nome, String endereco, String telefone, String email, String cpf, Cnh cnh, String dataDeAdmissao, TipoDeVinculo vinculo, Situacao situacao, ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis){
+        super(nome, endereco, telefone, email, cpf);
         this.cnh = cnh;
         this.dataDeAdmissao = dataDeAdmissao;
         this.vinculo = vinculo;
@@ -30,14 +29,6 @@ public class Motorista  {
             }
         }
         return false;
-    }
-
-    public PessoaFisica getPessoaFisica() {
-        return pessoaFisica;
-    }
-
-    public void setPessoaFisica(PessoaFisica pessoaFisica) {
-        this.pessoaFisica = pessoaFisica;
     }
 
     public Cnh getCnh() {

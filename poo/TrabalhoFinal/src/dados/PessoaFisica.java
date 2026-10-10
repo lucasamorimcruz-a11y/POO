@@ -6,4 +6,12 @@ public class PessoaFisica extends Pessoa {
         super (nome, endereco, telefone, email);
         this.CPF = cpf;
     }
+
+    public String getCPF() {
+        return CPF;
+    }
+
+    public void setCPF(String CPF) {
+        this.CPF = CPF;
+    }
 }
