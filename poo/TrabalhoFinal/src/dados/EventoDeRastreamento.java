@@ -1,73 +1,34 @@
 package dados;
 
-import dados.enums.Eventos;
+import java.time.*;
+import java.util.*;
 
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-
-public class EventoDeRastreamento {
-    private Date data;
-    private LocalTime hora;
+public class EventoRastreamento {
+    private Evento evento;
+    private LocalDateTime dataHora;
     private String localizacao;
     private String descricao;
-    private String caminhoDaFoto;
-    private ArrayList<Eventos> eventos;
+    private String foto;
 
-    public EventoDeRastreamento(Date data, LocalTime hora, String localizacao, String descricao, String caminhoDaFoto, ArrayList<Eventos> eventos) {
-        this.data = data;
-        this.hora = hora;
+    public EventoRastreamento(Evento evento, LocalDateTime dataHora, String localizacao, String descricao, String foto) {
+        this.evento = evento;
+        this.dataHora = dataHora;
         this.localizacao = localizacao;
         this.descricao = descricao;
-        this.caminhoDaFoto = caminhoDaFoto;
-        this.eventos = eventos;
+        this.foto = foto;
     }
 
-    public Date getData() {
-        return data;
-    }
+    public Evento getEvento() { return evento; }
+    public void setEvento(Evento evento) { this.evento = evento; }
+    public LocalDateTime getDataHora() { return dataHora; }
+    public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
+    public String getLocalizacao() { return localizacao; }
+    public void setLocalizacao(String localizacao) { this.localizacao = localizacao; }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public String getFoto() { return foto; }
+    public void setFoto(String foto) { this.foto = foto; }
 
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public LocalTime getHora() {
-        return hora;
-    }
-
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
-    }
-
-    public String getLocalizacao() {
-        return localizacao;
-    }
-
-    public void setLocalizacao(String localizacao) {
-        this.localizacao = localizacao;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getCaminhoDaFoto() {
-        return caminhoDaFoto;
-    }
-
-    public void setCaminhoDaFoto(String caminhoDaFoto) {
-        this.caminhoDaFoto = caminhoDaFoto;
-    }
-
-    public ArrayList<Eventos> getEventos() {
-        return eventos;
-    }
-
-    public void setEventos(ArrayList<Eventos> eventos) {
-        this.eventos = eventos;
-    }
+    @Override
+    public String toString() { return dataHora + " | " + evento + " | " + localizacao + " | " + descricao; }
 }
