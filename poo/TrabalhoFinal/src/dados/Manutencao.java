@@ -1,18 +1,19 @@
 package dados;
-import dados.enums.TipoDeManutencao;
-import java.util.Date;
+
+import java.time.*;
+import java.util.*;
 
 public class Manutencao {
-    private Date dataDaManutencao;
-    private TipoDeManutencao tipoDeManutencao;
-    private float quilometragem;
+    private LocalDate dataDaManutencao;
+    private TipoManutencao tipoDeManutencao;
+    private double quilometragem;
     private String descricaoDosServicos;
     private String pecasTrocadas;
     private String oficina;
-    private float valorTotal;
-    private Date proximaManutencao;
+    private double valorTotal;
+    private LocalDate proximaManutencao;
 
-    public Manutencao(Date dataDaManutencao, TipoDeManutencao tipoDeManutencao, float quilometragem, String descricaoDosServicos, String pecasTrocadas, String oficina, float valorTotal, Date proximaManutencao) {
+    public Manutencao(LocalDate dataDaManutencao, TipoManutencao tipoDeManutencao, double quilometragem, String descricaoDosServicos, String pecasTrocadas, String oficina, double valorTotal, LocalDate proximaManutencao) {
         this.dataDaManutencao = dataDaManutencao;
         this.tipoDeManutencao = tipoDeManutencao;
         this.quilometragem = quilometragem;
@@ -23,67 +24,20 @@ public class Manutencao {
         this.proximaManutencao = proximaManutencao;
     }
 
-    public Date getDataDaManutencao() {
-        return dataDaManutencao;
-    }
-
-    public void setDataDaManutencao(Date dataDaManutencao) {
-        this.dataDaManutencao = dataDaManutencao;
-    }
-
-    public TipoDeManutencao getTipoDeManutencao() {
-        return tipoDeManutencao;
-    }
-
-    public void setTipoDeManutencao(TipoDeManutencao tipoDeManutencao) {
-        this.tipoDeManutencao = tipoDeManutencao;
-    }
-
-    public float getQuilometragem() {
-        return quilometragem;
-    }
-
-    public void setQuilometragem(float quilometragem) {
-        this.quilometragem = quilometragem;
-    }
-
-    public String getDescricaoDosServicos() {
-        return descricaoDosServicos;
-    }
-
-    public void setDescricaoDosServicos(String descricaoDosServicos) {
-        this.descricaoDosServicos = descricaoDosServicos;
-    }
-
-    public String getPecasTrocadas() {
-        return pecasTrocadas;
-    }
-
-    public void setPecasTrocadas(String pecasTrocadas) {
-        this.pecasTrocadas = pecasTrocadas;
-    }
-
-    public String getOficina() {
-        return oficina;
-    }
-
-    public void setOficina(String oficina) {
-        this.oficina = oficina;
-    }
-
-    public float getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(float valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public Date getProximaManutencao() {
-        return proximaManutencao;
-    }
-
-    public void setProximaManutencao(Date proximaManutencao) {
-        this.proximaManutencao = proximaManutencao;
-    }
+    public LocalDate getDataDaManutencao() { return dataDaManutencao; }
+    public void setDataDaManutencao(LocalDate dataDaManutencao) { this.dataDaManutencao = dataDaManutencao; }
+    public TipoManutencao getTipoDeManutencao() { return tipoDeManutencao; }
+    public void setTipoDeManutencao(TipoManutencao tipoDeManutencao) { this.tipoDeManutencao = tipoDeManutencao; }
+    public double getQuilometragem() { return quilometragem; }
+    public void setQuilometragem(double quilometragem) { this.quilometragem = quilometragem; }
+    public String getDescricaoDosServicos() { return descricaoDosServicos; }
+    public void setDescricaoDosServicos(String descricaoDosServicos) { this.descricaoDosServicos = descricaoDosServicos; }
+    public String getPecasTrocadas() { return pecasTrocadas; }
+    public void setPecasTrocadas(String pecasTrocadas) { this.pecasTrocadas = pecasTrocadas; }
+    public String getOficina() { return oficina; }
+    public void setOficina(String oficina) { this.oficina = oficina; }
+    public double getValorTotal() { return valorTotal; }
+    public void setValorTotal(double valorTotal) { this.valorTotal = valorTotal; }
+    public LocalDate getProximaManutencao() { return proximaManutencao; }
+    public void setProximaManutencao(LocalDate proximaManutencao) { this.proximaManutencao = proximaManutencao; }
 }
