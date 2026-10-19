@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/** Camada de negócio: manipula as listas de objetos do pacote de dados. */
 public class Sistema {
 
     private final List<Cliente> clientes = new ArrayList<>();
@@ -142,9 +141,7 @@ public class Sistema {
                 p.getEnderecoDeEntrega().getRegiao()
         );
 
-        // Ajuste esta condição conforme os atributos existentes em Cliente.
-        // Se não existir isContratado(), substitua pela condição correta.
-        if (c.isContratado() && frete > c.getLimiteDeCredito()) {
+        if (c && frete > c.getLimiteDeCredito()) {
             System.out.println("Aviso: Limite de crédito excedido.");
             return -1.0;
         }
