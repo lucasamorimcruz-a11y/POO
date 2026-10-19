@@ -1,48 +1,26 @@
 package dados;
-import dados.enums.TipoDeEmbalagem;
+import java.time.*;
+import java.util.*;
 
-public class Itens {
-    private TipoDeEmbalagem tipoDeEmbalagem;
-    private float peso;
-    private float dimensao;
+public class Item {
+    private String tipoDeEmbalagem;
+    private double peso;
+    private double dimensao;
     private String descricao;
 
-    public Itens(TipoDeEmbalagem tipoDeEmbalagem, float peso, float dimensao, String descricao) {
+    public Item(String tipoDeEmbalagem, double peso, double dimensao, String descricao) {
         this.tipoDeEmbalagem = tipoDeEmbalagem;
         this.peso = peso;
         this.dimensao = dimensao;
         this.descricao = descricao;
     }
 
-    public TipoDeEmbalagem getTipoDeEmbalagem() {
-        return tipoDeEmbalagem;
-    }
-
-    public void setTipoDeEmbalagem(TipoDeEmbalagem tipoDeEmbalagem) {
-        this.tipoDeEmbalagem = tipoDeEmbalagem;
-    }
-
-    public float getPeso() {
-        return peso;
-    }
-
-    public void setPeso(float peso) {
-        this.peso = peso;
-    }
-
-    public float getDimensao() {
-        return dimensao;
-    }
-
-    public void setDimensao(float dimensao) {
-        this.dimensao = dimensao;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public String getTipoDeEmbalagem() { return tipoDeEmbalagem; }
+    public void setTipoDeEmbalagem(String tipoDeEmbalagem) { this.tipoDeEmbalagem = tipoDeEmbalagem; }
+    public double getPeso() { return peso; }
+    public void setPeso(double peso) { this.peso = peso; }
+    public double getDimensao() { return dimensao; }
+    public void setDimensao(double dimensao) { this.dimensao = dimensao; }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 }
