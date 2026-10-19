@@ -2,37 +2,23 @@ package dados;
 import java.util.Date;
 
 public class Cnh {
-    private String numeroDeCNH;
+    private String numeroCnh;
     private String categoria;
-    private Date dataDeValidade;
+    private LocalDate dataDeValidade;
 
-    public Cnh(String numeroDeCNH, String categoria, Date dataDeValidade) {
-        this.numeroDeCNH = numeroDeCNH;
+    public Cnh(String numeroCnh, String categoria, LocalDate dataDeValidade) {
+        this.numeroCnh = numeroCnh;
         this.categoria = categoria;
         this.dataDeValidade = dataDeValidade;
     }
 
-    public String getNumeroDeCNH() {
-        return numeroDeCNH;
-    }
+    public String getNumeroCnh() { return numeroCnh; }
+    public void setNumeroCnh(String numeroCnh) { this.numeroCnh = numeroCnh; }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public LocalDate getDataDeValidade() { return dataDeValidade; }
+    public void setDataDeValidade(LocalDate dataDeValidade) { this.dataDeValidade = dataDeValidade; }
 
-    public void setNumeroDeCNH(String numeroDeCNH) {
-        this.numeroDeCNH = numeroDeCNH;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public Date getDataDeValidade() {
-        return dataDeValidade;
-    }
-
-    public void setDataDeValidade(Date dataDeValidade) {
-        this.dataDeValidade = dataDeValidade;
-    }
+    public boolean estaValida() { return !dataDeValidade.isBefore(LocalDate.now()); }
+}
 }
