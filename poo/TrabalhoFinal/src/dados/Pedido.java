@@ -1,55 +1,72 @@
 package dados;
 
-import dados.enums.Periodo;
-import dados.enums.Status;
-import dados.enums.TipoDeServico;
+import dados.enums.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class Pedido {
     private int numero;
-    private Date dataDeSolicitacao;
-    private Cliente clienteDoPedido;
-    private Endereco enderecoDeColeta;
-    private String dataAgendadaPraColeta;
+    private LocalDate dataDeSolicitacao;
+    private String contatoNoLocal;
+    private LocalDate dataAgendadaPraColeta;
     private Periodo periodo;
     private String descricaoDaCarga;
-    private float pesoTotal;
-    private float volumeTotal;
-    private float valorDaMercadoria;
-    private Endereco enderecoDeEntrega;
+    private double pesoTotal;
+    private double volumeTotal;
+    private double valorDeclarado;
     private String contatoNoDestino;
-    private String prazoDeEntrega;
-    private float valorDoFrete;
-    private String formaDePagamento;
-    private Status status;
-    private ArrayList<Itens> itens = new ArrayList<>();
-    private Date horarioPrevistoDeEntrega;
-    private Date horarioRealDeEntrega;
+    private LocalDate prazoDeEntrega;
     private TipoDeServico tipoDeServico;
+    private double valorFrete;
+    private FormaDePagamento formaDePagamento;
+    private StatusPedido statusPedido;
+    private Cliente cliente;
+    private Endereco enderecoDeEntrega;
+    private Endereco enderecoDeColeta;
+    private Entrega entrega;
+    private ArrayList<Item> itens;
+    private ArrayList<EventoDeRastreamento> eventos;
+    private ArrayList<ConhecimentoTransporte> conhecimentos;
+    private ArrayList<FalhaNaEntrega> falhasNaEntrega;
 
-    public Pedido(int numero, Date dataDeSolicitacao, Cliente clienteDoPedido, Endereco enderecoDeColeta, String dataAgendadaPraColeta, Periodo periodo, String descricaoDaCarga, float pesoTotal, float volumeTotal, float valorDaMercadoria, Endereco enderecoDeEntrega, String contatoNoDestino, String prazoDeEntrega, float valorDoFrete, String formaDePagamento, Status status, ArrayList<Itens> itens, Date horarioPrevistoDeEntrega, Date horarioRealDeEntrega, TipoDeServico tipoDeServico) {
+
+    public Pedido(int numero, LocalDate dataDeSolicitacao, Cliente cliente,
+                  Endereco enderecoDeColeta, String contatoNoLocal,
+                  LocalDate dataAgendadaPraColeta, Periodo periodo,
+                  String descricaoDaCarga, double valorDeclarado,
+                  Endereco enderecoDeEntrega, String contatoNoDestino,
+                  LocalDate prazoDeEntrega, TipoDeServico tipoDeServico,
+                  FormaDePagamento formaDePagamento) {
         this.numero = numero;
         this.dataDeSolicitacao = dataDeSolicitacao;
-        this.clienteDoPedido = clienteDoPedido;
+        this.cliente = cliente;
         this.enderecoDeColeta = enderecoDeColeta;
+        this.contatoNoLocal = contatoNoLocal;
         this.dataAgendadaPraColeta = dataAgendadaPraColeta;
         this.periodo = periodo;
         this.descricaoDaCarga = descricaoDaCarga;
-        this.pesoTotal = pesoTotal;
-        this.volumeTotal = volumeTotal;
-        this.valorDaMercadoria = valorDaMercadoria;
+        this.valorDeclarado = valorDeclarado;
         this.enderecoDeEntrega = enderecoDeEntrega;
         this.contatoNoDestino = contatoNoDestino;
         this.prazoDeEntrega = prazoDeEntrega;
-        this.valorDoFrete = valorDoFrete;
-        this.formaDePagamento = formaDePagamento;
-        this.status = status;
-        this.itens = itens;
-        this.horarioPrevistoDeEntrega = horarioPrevistoDeEntrega;
-        this.horarioRealDeEntrega = horarioRealDeEntrega;
         this.tipoDeServico = tipoDeServico;
+        this.formaDePagamento = formaDePagamento;
+        this.statusPedido = StatusPedido.PENDENTE;
+    }
+    public void adicionarItem(Item item) {
+        itens.add(item);
+        pesoTotal += item.getPeso();
+    }
+
+    public void adicionarEvento(EventoDeRastreamento evento) {
+        eventos.add(evento);
+    }
+
+    public void adicionarFalha(FalhaNaEntrega falha) {
+        falhasNaEntrega.add(falha);
     }
 
     public int getNumero() {
@@ -60,35 +77,27 @@ public class Pedido {
         this.numero = numero;
     }
 
-    public Date getDataDeSolicitacao() {
+    public LocalDate getDataDeSolicitacao() {
         return dataDeSolicitacao;
     }
 
-    public void setDataDeSolicitacao(Date dataDeSolicitacao) {
+    public void setDataDeSolicitacao(LocalDate dataDeSolicitacao) {
         this.dataDeSolicitacao = dataDeSolicitacao;
     }
 
-    public Cliente getClienteDoPedido() {
-        return clienteDoPedido;
+    public String getContatoNoLocal() {
+        return contatoNoLocal;
     }
 
-    public void setClienteDoPedido(Cliente clienteDoPedido) {
-        this.clienteDoPedido = clienteDoPedido;
+    public void setContatoNoLocal(String contatoNoLocal) {
+        this.contatoNoLocal = contatoNoLocal;
     }
 
-    public Endereco getEnderecoDeColeta() {
-        return enderecoDeColeta;
-    }
-
-    public void setEnderecoDeColeta(Endereco enderecoDeColeta) {
-        this.enderecoDeColeta = enderecoDeColeta;
-    }
-
-    public String getDataAgendadaPraColeta() {
+    public LocalDate getDataAgendadaPraColeta() {
         return dataAgendadaPraColeta;
     }
 
-    public void setDataAgendadaPraColeta(String dataAgendadaPraColeta) {
+    public void setDataAgendadaPraColeta(LocalDate dataAgendadaPraColeta) {
         this.dataAgendadaPraColeta = dataAgendadaPraColeta;
     }
 
@@ -108,36 +117,28 @@ public class Pedido {
         this.descricaoDaCarga = descricaoDaCarga;
     }
 
-    public float getPesoTotal() {
+    public double getPesoTotal() {
         return pesoTotal;
     }
 
-    public void setPesoTotal(float pesoTotal) {
+    public void setPesoTotal(double pesoTotal) {
         this.pesoTotal = pesoTotal;
     }
 
-    public float getVolumeTotal() {
+    public double getVolumeTotal() {
         return volumeTotal;
     }
 
-    public void setVolumeTotal(float volumeTotal) {
+    public void setVolumeTotal(double volumeTotal) {
         this.volumeTotal = volumeTotal;
     }
 
-    public float getValorDaMercadoria() {
-        return valorDaMercadoria;
+    public double getValorDeclarado() {
+        return valorDeclarado;
     }
 
-    public void setValorDaMercadoria(float valorDaMercadoria) {
-        this.valorDaMercadoria = valorDaMercadoria;
-    }
-
-    public Endereco getEnderecoDeEntrega() {
-        return enderecoDeEntrega;
-    }
-
-    public void setEnderecoDeEntrega(Endereco enderecoDeEntrega) {
-        this.enderecoDeEntrega = enderecoDeEntrega;
+    public void setValorDeclarado(double valorDeclarado) {
+        this.valorDeclarado = valorDeclarado;
     }
 
     public String getContatoNoDestino() {
@@ -148,60 +149,12 @@ public class Pedido {
         this.contatoNoDestino = contatoNoDestino;
     }
 
-    public String getPrazoDeEntrega() {
+    public LocalDate getPrazoDeEntrega() {
         return prazoDeEntrega;
     }
 
-    public void setPrazoDeEntrega(String prazoDeEntrega) {
+    public void setPrazoDeEntrega(LocalDate prazoDeEntrega) {
         this.prazoDeEntrega = prazoDeEntrega;
-    }
-
-    public float getValorDoFrete() {
-        return valorDoFrete;
-    }
-
-    public void setValorDoFrete(float valorDoFrete) {
-        this.valorDoFrete = valorDoFrete;
-    }
-
-    public String getFormaDePagamento() {
-        return formaDePagamento;
-    }
-
-    public void setFormaDePagamento(String formaDePagamento) {
-        this.formaDePagamento = formaDePagamento;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public ArrayList<Itens> getItens() {
-        return itens;
-    }
-
-    public void setItens(ArrayList<Itens> itens) {
-        this.itens = itens;
-    }
-
-    public Date getHorarioPrevistoDeEntrega() {
-        return horarioPrevistoDeEntrega;
-    }
-
-    public void setHorarioPrevistoDeEntrega(Date horarioPrevistoDeEntrega) {
-        this.horarioPrevistoDeEntrega = horarioPrevistoDeEntrega;
-    }
-
-    public Date getHorarioRealDeEntrega() {
-        return horarioRealDeEntrega;
-    }
-
-    public void setHorarioRealDeEntrega(Date horarioRealDeEntrega) {
-        this.horarioRealDeEntrega = horarioRealDeEntrega;
     }
 
     public TipoDeServico getTipoDeServico() {
@@ -210,5 +163,93 @@ public class Pedido {
 
     public void setTipoDeServico(TipoDeServico tipoDeServico) {
         this.tipoDeServico = tipoDeServico;
+    }
+
+    public double getValorFrete() {
+        return valorFrete;
+    }
+
+    public void setValorFrete(double valorFrete) {
+        this.valorFrete = valorFrete;
+    }
+
+    public FormaDePagamento getFormaDePagamento() {
+        return formaDePagamento;
+    }
+
+    public void setFormaDePagamento(FormaDePagamento formaDePagamento) {
+        this.formaDePagamento = formaDePagamento;
+    }
+
+    public StatusPedido getStatusPedido() {
+        return statusPedido;
+    }
+
+    public void setStatusPedido(StatusPedido statusPedido) {
+        this.statusPedido = statusPedido;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Endereco getEnderecoDeEntrega() {
+        return enderecoDeEntrega;
+    }
+
+    public void setEnderecoDeEntrega(Endereco enderecoDeEntrega) {
+        this.enderecoDeEntrega = enderecoDeEntrega;
+    }
+
+    public Endereco getEnderecoDeColeta() {
+        return enderecoDeColeta;
+    }
+
+    public void setEnderecoDeColeta(Endereco enderecoDeColeta) {
+        this.enderecoDeColeta = enderecoDeColeta;
+    }
+
+    public Entrega getEntrega() {
+        return entrega;
+    }
+
+    public void setEntrega(Entrega entrega) {
+        this.entrega = entrega;
+    }
+
+    public ArrayList<Item> getItens() {
+        return itens;
+    }
+
+    public void setItens(ArrayList<Item> itens) {
+        this.itens = itens;
+    }
+
+    public ArrayList<EventoDeRastreamento> getEventos() {
+        return eventos;
+    }
+
+    public void setEventos(ArrayList<EventoDeRastreamento> eventos) {
+        this.eventos = eventos;
+    }
+
+    public ArrayList<ConhecimentoTransporte> getConhecimentos() {
+        return conhecimentos;
+    }
+
+    public void setConhecimentos(ArrayList<ConhecimentoTransporte> conhecimentos) {
+        this.conhecimentos = conhecimentos;
+    }
+
+    public ArrayList<FalhaNaEntrega> getFalhasNaEntrega() {
+        return falhasNaEntrega;
+    }
+
+    public void setFalhasNaEntrega(ArrayList<FalhaNaEntrega> falhasNaEntrega) {
+        this.falhasNaEntrega = falhasNaEntrega;
     }
 }

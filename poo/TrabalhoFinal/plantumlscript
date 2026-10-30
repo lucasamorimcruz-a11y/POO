@@ -1,0 +1,384 @@
+@startuml Transportadora
+' ---------- Estilo (inspirado no diagrama de referência) ----------
+skinparam shadowing false
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam nodesep 12
+skinparam ranksep 18
+skinparam packageStyle rectangle
+skinparam ArrowColor #3B5B7E
+skinparam ClassBorderColor #3B5B7E
+skinparam ClassBackgroundColor #FEFEFE
+skinparam PackageBorderColor #3B5B7E
+skinparam PackageFontStyle bold
+hide empty members
+
+' =====================================================
+' NEGÓCIO
+' =====================================================
+package "negocio" as negocio #E6F0FA {
+  class Sistema {
+    - clientes : List<Cliente>
+    - motoristas : List<Motorista>
+    - veiculos : List<Veiculo>
+    - pedidos : List<Pedido>
+    - rotas : List<Rota>
+    - conhecimentos : List<ConhecimentoTransporte>
+    - tabelaPadrao : TabelaPreco
+    --
+    + cadastrarCliente(cliente : Cliente) : void
+    + cadastrarMotorista(motorista : Motorista) : void
+    + cadastrarVeiculo(veiculo : Veiculo) : void
+    + buscarCliente(documento : String) : Cliente
+    + buscarMotorista(cpf : String) : Motorista
+    + buscarVeiculo(placa : String) : Veiculo
+    + buscarPedido(numero : int) : Pedido
+    + criarPedido(cliente : Cliente, coleta : Endereco, contatoColeta : String, dataColeta : LocalDate, periodo : Periodo, descricao : String, valorDeclarado : double, entrega : Endereco, contatoDestino : String, tipo : TipoDeServico, formaDePagamento : FormaDePagamento) : Pedido
+    + adicionarItem(pedido : Pedido, item : Item) : void
+    + calcularFrete(pedido : Pedido, distanciaKm : double, regiao : Regiao) : double
+    + cancelarPedido(pedido : Pedido) : void
+    + pedidosDoCliente(cliente : Cliente) : List<Pedido>
+    + registrarColeta(pedido : Pedido, local : String, notaFiscal : String) : ConhecimentoTransporte
+    + buscarConhecimento(pedido : Pedido) : ConhecimentoTransporte
+    + criarRota(data : LocalDate, veiculo : Veiculo, motorista : Motorista) : Rota
+    + adicionarPedidoARota(rota : Rota, pedido : Pedido, horarioPrevisto : LocalDateTime) : void
+    + iniciarRota(rota : Rota, kmInicial : double) : void
+    + concluirRota(rota : Rota, kmFinal : double) : void
+    + registrarDespesa(rota : Rota, data : LocalDate, tipo : TipoDespesa, valor : double, comprovante : String) : void
+    + registrarEvento(pedido : Pedido, tipo : TipoEvento, local : String, descricao : String, foto : String) : void
+    + registrarEntrega(pedido : Pedido, nome : String, documento : String, parentesco : String, assinatura : String) : void
+    + registrarFalhaNaEntrega(pedido : Pedido, motivo : String, novaTentativa : boolean) : void
+    + rastrear(numeroPedido : int) : List<EventoRastreamento>
+    + registrarManutencao(veiculo : Veiculo, tipo : TipoDeManutencao, servico : String, pecas : String, oficina : String, valor : double, proxima : LocalDate) : void
+    + veiculosComManutencaoPendente() : List<Veiculo>
+    + veiculosDisponiveis(tipo : TipoDeVeiculo) : List<Veiculo>
+    + motoristasHabilitados(tipo : TipoDeVeiculo) : List<Motorista>
+  }
+}
+
+' =====================================================
+' DADOS
+' =====================================================
+package "dados" as dados #F5F7FA {
+
+  ' ---------- Pessoas e clientes ----------
+  abstract class Pessoa {
+    - nome : String
+    - endereco : Endereco
+    - telefone : String
+    - email : String
+  }
+  class PessoaFisica {
+    - cpf : String
+  }
+  class PessoaJuridica {
+    - cnpj : String
+    - razaoSocial : String
+    - inscricaoEstadual : String
+  }
+  class Endereco {
+    - rua : String
+    - numeroDoLocal : int
+    - bairro : String
+    - cidade : String
+    - estado : String
+    - pontoDeReferencia : String
+  }
+  class Cliente {
+    - pessoa : Pessoa
+    - tipo : TipoDeCliente
+    - tabelaPreco : TabelaPreco
+    - limiteDeCredito : double
+  }
+  class TabelaPreco {
+    - valorPorKg : double
+    - valorPorKm : double
+    - valorMinimo : double
+    - descontoContratado : double
+    - fatorPorTipoDeServico : Map<TipoDeServico, Double>
+    - fatorPorRegiao : Map<Regiao, Double>
+    + calcularFrete(peso : double, distanciaKm : double,\ntipo : TipoDeServico, regiao : Regiao,\nclienteContratado : boolean) : double
+  }
+
+  ' ---------- Motorista / Veículo ----------
+  class Cnh {
+    - numero : String
+    - categoria : String
+    - dataDeValidade : LocalDate
+  }
+  class Motorista {
+    - cnh : Cnh
+    - dataDeAdmissao : LocalDate
+    - vinculo : TipoDeVinculo
+    - situacao : Situacao
+    - tiposDeVeiculoHabilitados : List<TipoDeVeiculo>
+    + podeDirigir(veiculo : Veiculo) : boolean
+  }
+  class Veiculo {
+    - placa : String
+    - marca : String
+    - modelo : String
+    - anoDeFabricacao : int
+    - tipo : TipoDeVeiculo
+    - capacidadeEmQuilos : double
+    - capacidadeEmMetrosCubicos : double
+    - quilometragemAtual : double
+    - dataDeAquisicao : LocalDate
+    - status : StatusVeiculo
+    - proximaManutencaoPreventiva : LocalDate
+    - manutencoes : List<Manutencao>
+  }
+  class Manutencao {
+    - data : LocalDate
+    - tipo : TipoDeManutencao
+    - quilometragem : double
+    - descricaoDosServicos : String
+    - pecasTrocadas : String
+    - oficina : String
+    - valorTotal : double
+    - proximaManutencao : LocalDate
+  }
+
+  ' ---------- Pedido ----------
+  class Pedido {
+    - numero : int
+    - dataDeSolicitacao : LocalDate
+    - cliente : Cliente
+    - enderecoDeColeta : Endereco
+    - contatoNoLocal : String
+    - dataAgendadaParaColeta : LocalDate
+    - periodo : Periodo
+    - descricaoDaCarga : String
+    - pesoTotal : double
+    - volumeTotal : double
+    - valorDeclarado : double
+    - enderecoDeEntrega : Endereco
+    - contatoNoDestino : String
+    - prazoDeEntrega : LocalDate
+    - tipoDeServico : TipoDeServico
+    - valorDoFrete : double
+    - formaDePagamento : FormaDePagamento
+    - status : StatusPedido
+    - itens : List<Item>
+    - eventos : List<EventoRastreamento>
+    - entrega : Entrega
+    - falhas : List<FalhaNaEntrega>
+    - conhecimento : ConhecimentoTransporte
+  }
+  class Item {
+    - tipoDeEmbalagem : String
+    - peso : double
+    - dimensoes : String
+    - descricao : String
+  }
+  class ConhecimentoTransporte {
+    - numero : int
+    - dataEmissao : LocalDate
+    - remetente : String
+    - destinatario : String
+    - discriminacaoDaCarga : String
+    - valorFrete : double
+    - impostos : double
+    - seguroContratado : boolean
+    - valorSeguro : double
+    - notaFiscal : String
+  }
+  class EventoRastreamento {
+    - tipo : TipoEvento
+    - data : LocalDate
+    - hora : LocalTime
+    - localizacao : String
+    - descricao : String
+    - fotoComprobatoria : String
+  }
+  class Entrega {
+    - nomeDeQuemRecebeu : String
+    - documentoDeIdentificacao : String
+    - parentescoOuFuncao : String
+    - data : LocalDate
+    - hora : LocalTime
+    - assinaturaOuFotoDoComprovante : String
+  }
+  class FalhaNaEntrega {
+    - motivo : String
+    - novaTentativa : boolean
+  }
+
+  ' ---------- Rota ----------
+  class Rota {
+    - numero : int
+    - data : LocalDate
+    - veiculoAlocado : Veiculo
+    - motoristaResponsavel : Motorista
+    - pedidos : List<PedidoNaRota>
+    - quilometragemInicial : double
+    - quilometragemFinal : double
+    - status : StatusRota
+    - despesas : List<Despesa>
+  }
+  class PedidoNaRota {
+    - pedido : Pedido
+    - sequenciaDeEntrega : int
+    - horarioPrevistoDeEntrega : LocalDateTime
+    - horarioRealDeEntrega : LocalDateTime
+  }
+  class Despesa {
+    - data : LocalDate
+    - tipo : TipoDespesa
+    - valor : double
+    - comprovante : String
+  }
+
+  ' ---------- Enums ----------
+  package "enums" as enums #FFF3DC {
+    enum TipoDeCliente {
+      EVENTUAL
+      CONTRATADO
+    }
+    enum TipoDeVeiculo {
+      CARRO
+      VAN
+      CAMINHAO_PEQUENO
+      CAMINHAO_GRANDE
+    }
+    enum StatusVeiculo {
+      DISPONIVEL
+      EM_ROTA
+      EM_MANUTENCAO
+    }
+    enum TipoDeVinculo {
+      CLT
+      TERCEIRIZADO
+    }
+    enum Situacao {
+      ATIVO
+      AFASTADO
+      DESLIGADO
+    }
+    enum Periodo {
+      MANHA
+      TARDE
+      NOITE
+    }
+    enum TipoDeServico {
+      ECONOMICO
+      EXPRESSO
+      AGENDADO
+    }
+    enum FormaDePagamento {
+      DINHEIRO
+      PIX
+      CARTAO
+      BOLETO
+      FATURADO
+    }
+    enum StatusPedido {
+      PENDENTE
+      COLETADO
+      EM_TRANSITO
+      ENTREGUE
+      CANCELADO
+    }
+    enum StatusRota {
+      PLANEJADA
+      EM_ANDAMENTO
+      CONCLUIDA
+    }
+    enum TipoEvento {
+      COLETA_REALIZADA
+      CARGA_EM_TRANSITO
+      SAIU_PARA_ENTREGA
+      ENTREGUE
+      DESTINATARIO_AUSENTE
+      ENDERECO_NAO_LOCALIZADO
+      RECUSADO_PELO_DESTINATARIO
+    }
+    enum TipoDeManutencao {
+      PREVENTIVA
+      CORRETIVA
+    }
+    enum TipoDespesa {
+      COMBUSTIVEL
+      PEDAGIO
+      ALIMENTACAO
+      OUTRAS
+    }
+    enum Regiao {
+      LOCAL
+      ESTADUAL
+      INTERESTADUAL
+      OUTRA
+    }
+  }
+}
+
+' =====================================================
+' RELACIONAMENTOS (setas curtas e direcionadas)
+' =====================================================
+Sistema -down-> Pedido
+
+' Pessoas
+Pessoa <|-down- PessoaFisica
+Pessoa <|-down- PessoaJuridica
+PessoaFisica <|-down- Motorista
+Pessoa "1" -right-> "1" Endereco
+Cliente "1" -right-> "1" Pessoa
+Cliente "0..*" -down-> "0..1" TabelaPreco
+Motorista "1" *-down- "1" Cnh
+
+' Veículo
+Veiculo "1" *-down- "0..*" Manutencao
+
+' Pedido
+Pedido "0..*" -right-> "1" Cliente
+Pedido "0..*" -down-> "2" Endereco
+Pedido "1" *-down- "1..*" Item
+Pedido "1" *-down- "0..*" EventoRastreamento
+Pedido "1" *-down- "0..1" Entrega
+Pedido "1" *-down- "0..*" FalhaNaEntrega
+Pedido "1" -down- "0..1" ConhecimentoTransporte
+
+' Rota
+Rota "0..*" -right-> "1" Veiculo
+Rota "0..*" -right-> "1" Motorista
+Rota "1" *-down- "1..*" PedidoNaRota
+PedidoNaRota "0..*" -left-> "1" Pedido
+Rota "1" *-down- "0..*" Despesa
+
+' --- Relações com enums ---
+Cliente -down-> TipoDeCliente
+Veiculo -down-> TipoDeVeiculo
+Veiculo -down-> StatusVeiculo
+Motorista -down-> TipoDeVinculo
+Motorista -down-> Situacao
+Motorista -down-> TipoDeVeiculo
+Manutencao -down-> TipoDeManutencao
+Pedido -down-> Periodo
+Pedido -down-> TipoDeServico
+Pedido -down-> FormaDePagamento
+Pedido -down-> StatusPedido
+Rota -down-> StatusRota
+Despesa -down-> TipoDespesa
+EventoRastreamento -down-> TipoEvento
+TabelaPreco -down-> TipoDeServico
+TabelaPreco -down-> Regiao
+
+' --- Enums em fila (uma linha só) ---
+Cnh -[hidden]down- TipoDeVinculo
+TipoDeCliente -[hidden]right- TipoDeVinculo
+TipoDeVinculo -[hidden]right- Situacao
+Situacao -[hidden]right- TipoDeVeiculo
+TipoDeVeiculo -[hidden]right- StatusVeiculo
+StatusVeiculo -[hidden]right- TipoDeManutencao
+TipoDeManutencao -[hidden]right- TipoDespesa
+TipoDespesa -[hidden]right- StatusRota
+StatusRota -[hidden]right- TipoEvento
+TipoEvento -[hidden]right- Periodo
+Periodo -[hidden]right- TipoDeServico
+TipoDeServico -[hidden]right- FormaDePagamento
+FormaDePagamento -[hidden]right- StatusPedido
+StatusPedido -[hidden]right- Regiao
+
+@enduml

@@ -1,24 +1,23 @@
 package dados;
-import dados.enums.TipoDeEmbalagem;
 
-public class Itens {
-    private TipoDeEmbalagem tipoDeEmbalagem;
+public class Item {
+    private String tipoDeEmbalagem;
     private float peso;
     private float dimensao;
     private String descricao;
 
-    public Itens(TipoDeEmbalagem tipoDeEmbalagem, float peso, float dimensao, String descricao) {
+    public Item(String tipoDeEmbalagem, float peso, float dimensao, String descricao) {
         this.tipoDeEmbalagem = tipoDeEmbalagem;
         this.peso = peso;
         this.dimensao = dimensao;
         this.descricao = descricao;
     }
 
-    public TipoDeEmbalagem getTipoDeEmbalagem() {
+    public String getTipoDeEmbalagem() {
         return tipoDeEmbalagem;
     }
 
-    public void setTipoDeEmbalagem(TipoDeEmbalagem tipoDeEmbalagem) {
+    public void setTipoDeEmbalagem(String tipoDeEmbalagem) {
         this.tipoDeEmbalagem = tipoDeEmbalagem;
     }
 

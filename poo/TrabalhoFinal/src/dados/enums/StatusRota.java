@@ -1,13 +1,13 @@
 package dados.enums;
 
-public enum Status {
+public enum StatusRota {
     DISPONIVEL("Disponível"),
-    EM_ROTA("Em rota"),
-    EM_MANUTENCAO("Em manutenção");
+    EM_ANDAMENTO("Em andamento"),
+    CONCLUIDA ("Concluida");
 
     private final String status;
 
-    Status(String status) {
+    StatusRota(String status) {
         this.status = status;
     }
 

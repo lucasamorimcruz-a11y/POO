@@ -1,20 +1,22 @@
 package dados;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class ConhecimentoTransporte {
     private int numero;
-    private Date dataEmissao;
+    private LocalDate dataEmissao;
     private String remetente;
     private String destinatario;
     private String descriminacaoCarga;
     private float valorFrete;
     private float impostos;
+    private boolean seguroContratado;
     private float valorSeguro;
     private String notaFiscal;
     private Pedido pedido;
 
-    public ConhecimentoTransporte(int numero, Date dataEmissao, String remetente, String destinatario, String descriminacaoCarga, float valorFrete, float impostos, float valorSeguro, String notaFiscal, Pedido pedido) {
+    public ConhecimentoTransporte(int numero, LocalDate dataEmissao, String remetente, String destinatario, String descriminacaoCarga, float valorFrete, float impostos, boolean seguroContratado, float valorSeguro, String notaFiscal, Pedido pedido) {
         this.numero = numero;
         this.dataEmissao = dataEmissao;
         this.remetente = remetente;
@@ -22,6 +24,7 @@ public class ConhecimentoTransporte {
         this.descriminacaoCarga = descriminacaoCarga;
         this.valorFrete = valorFrete;
         this.impostos = impostos;
+        this.seguroContratado = seguroContratado;
         this.valorSeguro = valorSeguro;
         this.notaFiscal = notaFiscal;
         this.pedido = pedido;
@@ -35,11 +38,11 @@ public class ConhecimentoTransporte {
         this.numero = numero;
     }
 
-    public Date getDataEmissao() {
+    public LocalDate getDataEmissao() {
         return dataEmissao;
     }
 
-    public void setDataEmissao(Date dataEmissao) {
+    public void setDataEmissao(LocalDate dataEmissao) {
         this.dataEmissao = dataEmissao;
     }
 
@@ -83,6 +86,14 @@ public class ConhecimentoTransporte {
         this.impostos = impostos;
     }
 
+    public boolean isSeguroContratado() {
+        return seguroContratado;
+    }
+
+    public void setSeguroContratado(boolean seguroContratado) {
+        this.seguroContratado = seguroContratado;
+    }
+
     public float getValorSeguro() {
         return valorSeguro;
     }
@@ -106,4 +117,5 @@ public class ConhecimentoTransporte {
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
     }
+
 }

@@ -4,16 +4,17 @@ import dados.enums.Situacao;
 import dados.enums.TipoDeVeiculo;
 import dados.enums.TipoDeVinculo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Motorista extends PessoaFisica {
     private Cnh cnh;
-    private String dataDeAdmissao;
+    private LocalDate dataDeAdmissao;
     private TipoDeVinculo vinculo;
     private Situacao situacao;
     private ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis;
 
-    public Motorista (String nome, String endereco, String telefone, String email, String cpf, Cnh cnh, String dataDeAdmissao, TipoDeVinculo vinculo, Situacao situacao, ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis){
+    public Motorista (String nome, String endereco, String telefone, String email, String cpf, Cnh cnh, LocalDate dataDeAdmissao, TipoDeVinculo vinculo, Situacao situacao, ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis){
         super(nome, endereco, telefone, email, cpf);
         this.cnh = cnh;
         this.dataDeAdmissao = dataDeAdmissao;
@@ -39,11 +40,11 @@ public class Motorista extends PessoaFisica {
         this.cnh = cnh;
     }
 
-    public String getDataDeAdmissao() {
+    public LocalDate getDataDeAdmissao() {
         return dataDeAdmissao;
     }
 
-    public void setDataDeAdmissao(String dataDeAdmissao) {
+    public void setDataDeAdmissao(LocalDate dataDeAdmissao) {
         this.dataDeAdmissao = dataDeAdmissao;
     }
 

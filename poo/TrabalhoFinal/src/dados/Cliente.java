@@ -6,9 +6,9 @@ public class Cliente  {
     private Pessoa pessoa;
     private TipoCliente tipoCliente;
     private TabelaPreco tabelaDePreco;
-    private float limiteDeCredito;
+    private double limiteDeCredito;
 
-    public Cliente(Pessoa pessoa, TipoCliente tipoCliente, TabelaPreco tabelaDePreco, float limiteDeCredito) {
+    public Cliente(Pessoa pessoa, TipoCliente tipoCliente, TabelaPreco tabelaDePreco, double limiteDeCredito) {
         this.pessoa = pessoa;
         this.tipoCliente = tipoCliente;
         this.tabelaDePreco = tabelaDePreco;
@@ -39,11 +39,11 @@ public class Cliente  {
         this.tabelaDePreco = tabelaDePreco;
     }
 
-    public float getLimiteDeCredito() {
+    public double getLimiteDeCredito() {
         return limiteDeCredito;
     }
 
-    public void setLimiteDeCredito(float limiteDeCredito) {
+    public void setLimiteDeCredito(double limiteDeCredito) {
         this.limiteDeCredito = limiteDeCredito;
     }
 }

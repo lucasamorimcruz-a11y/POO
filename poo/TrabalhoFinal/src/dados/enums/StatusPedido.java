@@ -1,14 +1,14 @@
 
 package dados.enums;
 
-public enum StatusEntrega {
+public enum StatusPedido {
     PENDENTE("Pendente"),
-    EM_ANDAMENTO("Em andamento"),
+    COLETADO("Coletado"),
+    EM_TRANSITO ("Em transito"),
     ENTREGUE("Entregue"),
-    NAO_REALIZADA("Não realizada"),
-    CANCELADA("Cancelada");
+    CANCELADO("Cancelado");
     private  String status;
-    StatusEntrega(String status) {
+    StatusPedido(String status) {
         this.status = status;
     }
     public String getStatus() {

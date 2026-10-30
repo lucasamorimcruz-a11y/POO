@@ -2,26 +2,27 @@ package dados;
 
 import dados.enums.TipoDeDespesa;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Despesa {
-    private Date data;
+    private LocalDate data;
     private TipoDeDespesa tipoDeDespesa;
-    private float valor;
+    private double valor;
     private String comprovante;
 
-    public Despesa(Date data, TipoDeDespesa tipoDeDespesa, float valor, String comprovante) {
+    public Despesa(LocalDate data, TipoDeDespesa tipoDeDespesa, float valor, String comprovante) {
         this.data = data;
         this.tipoDeDespesa = tipoDeDespesa;
         this.valor = valor;
         this.comprovante = comprovante;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
@@ -33,11 +34,11 @@ public class Despesa {
         this.tipoDeDespesa = tipoDeDespesa;
     }
 
-    public float getValor() {
+    public double getValor() {
         return valor;
     }
 
-    public void setValor(float valor) {
+    public void setValor(double valor) {
         this.valor = valor;
     }
 

@@ -1,34 +1,33 @@
 package dados;
 
-import dados.enums.Eventos;
 import dados.enums.TipoDeEvento;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class EventoDeRastreamento {
-    private Date data;
+    private LocalDate data;
     private LocalTime hora;
+    private TipoDeEvento tipo;
     private String localizacao;
     private String descricao;
-    private String caminhoDaFoto;
-    private TipoDeEvento tipo;
+    private String fotoComprobatoria;
 
-    public EventoDeRastreamento(Date data, LocalTime hora, String localizacao, String descricao, String caminhoDaFoto, TipoDeEvento evento) {
+    public EventoDeRastreamento(LocalDate data, LocalTime hora, TipoDeEvento tipo, String localizacao, String descricao, String fotoComprobatoria) {
         this.data = data;
         this.hora = hora;
+        this.tipo = tipo;
         this.localizacao = localizacao;
         this.descricao = descricao;
-        this.caminhoDaFoto = caminhoDaFoto;
-        this.tipo = evento;
+        this.fotoComprobatoria = fotoComprobatoria;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
@@ -38,6 +37,14 @@ public class EventoDeRastreamento {
 
     public void setHora(LocalTime hora) {
         this.hora = hora;
+    }
+
+    public TipoDeEvento getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoDeEvento tipo) {
+        this.tipo = tipo;
     }
 
     public String getLocalizacao() {
@@ -56,19 +63,11 @@ public class EventoDeRastreamento {
         this.descricao = descricao;
     }
 
-    public String getCaminhoDaFoto() {
-        return caminhoDaFoto;
+    public String getFotoComprobatoria() {
+        return fotoComprobatoria;
     }
 
-    public void setCaminhoDaFoto(String caminhoDaFoto) {
-        this.caminhoDaFoto = caminhoDaFoto;
-    }
-
-    public TipoDeEvento getEventos() {
-        return tipo;
-    }
-
-    public void setEventos(TipoDeEvento eventos) {
-        this.tipo = eventos;
+    public void setFotoComprobatoria(String fotoComprobatoria) {
+        this.fotoComprobatoria = fotoComprobatoria;
     }
 }

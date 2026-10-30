@@ -2,79 +2,72 @@ package dados;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Entrega {
-    private String nome;
-    private String documento;
-    private String parentesco;
-    private LocalDate dia;
-    private LocalDateTime hora;
-    private String assinatura;
-    private String foto;
+    private String nomeDeQuemRecebeu;
+    private String documentoDeIdentificacao;
+    private String parentescoOuFuncao;
+    private LocalDate data;
+    private LocalTime hora;
+    private String assinaturaOuFotoDeComprovante;
 
-    public Entrega(String nome, String documento, String parentesco, LocalDate dia, LocalDateTime hora, String assinatura, String foto) {
-        this.nome = nome;
-        this.documento = documento;
-        this.parentesco = parentesco;
-        this.dia = dia;
+    public Entrega(String nomeDeQuemRecebeu, String documentoDeIdentificacao, String parentescoOuFuncao, LocalDate data, LocalTime hora, String assinaturaOuFotoDeComprovante) {
+        this.nomeDeQuemRecebeu = nomeDeQuemRecebeu;
+        this.documentoDeIdentificacao = documentoDeIdentificacao;
+        this.parentescoOuFuncao = parentescoOuFuncao;
+        this.data = data;
         this.hora = hora;
-        this.assinatura = assinatura;
-        this.foto = foto;
+        this.assinaturaOuFotoDeComprovante = assinaturaOuFotoDeComprovante;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeDeQuemRecebeu() {
+        return nomeDeQuemRecebeu;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeDeQuemRecebeu(String nomeDeQuemRecebeu) {
+        this.nomeDeQuemRecebeu = nomeDeQuemRecebeu;
     }
 
-    public String getDocumento() {
-        return documento;
+    public String getDocumentoDeIdentificacao() {
+        return documentoDeIdentificacao;
     }
 
-    public void setDocumento(String documento) {
-        this.documento = documento;
+    public void setDocumentoDeIdentificacao(String documentoDeIdentificacao) {
+        this.documentoDeIdentificacao = documentoDeIdentificacao;
     }
 
-    public String getParentesco() {
-        return parentesco;
+    public String getParentescoOuFuncao() {
+        return parentescoOuFuncao;
     }
 
-    public void setParentesco(String parentesco) {
-        this.parentesco = parentesco;
+    public void setParentescoOuFuncao(String parentescoOuFuncao) {
+        this.parentescoOuFuncao = parentescoOuFuncao;
     }
 
-    public LocalDate getDia() {
-        return dia;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDia(LocalDate dia) {
-        this.dia = dia;
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
-    public LocalDateTime getHora() {
+    public LocalTime getHora() {
         return hora;
     }
 
-    public void setHora(LocalDateTime hora) {
+    public void setHora(LocalTime hora) {
         this.hora = hora;
     }
 
-    public String getAssinatura() {
-        return assinatura;
+    public String getAssinaturaOuFotoDeComprovante() {
+        return assinaturaOuFotoDeComprovante;
     }
 
-    public void setAssinatura(String assinatura) {
-        this.assinatura = assinatura;
-    }
-
-    public String getFoto() {
-        return foto;
-    }
-
-    public void setFoto(String foto) {
-        this.foto = foto;
+    public void setAssinaturaOuFotoDeComprovante(String assinaturaOuFotoDeComprovante) {
+        this.assinaturaOuFotoDeComprovante = assinaturaOuFotoDeComprovante;
     }
 }
+
+

@@ -1,20 +1,21 @@
 package dados;
 
-import dados.enums.Status;
+import dados.enums.StatusRota;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Rota {
     private int numero;
-    private String data;
+    private LocalDate data;
+    private double quilometragemInicial;
+    private double quilometragemFinal;
+    private StatusRota statusRota;
     private Veiculo veiculoAlocado;
-    private Motorista motoristaResponsavel;
     private ArrayList<Pedido> pedidos;
-    private float quilometragemInicial;
-    private float quilometragemFinal;
-    private Status status;
+    private Motorista motoristaResponsavel;
 
-    public Rota(int numero, String data, Veiculo veiculoAlocado, Motorista motoristaResponsavel, ArrayList<Pedido> pedidos, float quilometragemInicial, float quilometragemFinal) {
+    public Rota(int numero, LocalDate data, Veiculo veiculoAlocado, Motorista motoristaResponsavel, ArrayList<Pedido> pedidos, float quilometragemInicial, float quilometragemFinal) {
         this.numero = numero;
         this.data = data;
         this.veiculoAlocado = veiculoAlocado;
@@ -80,11 +81,11 @@ public class Rota {
         this.quilometragemFinal = quilometragemFinal;
     }
 
-    public Status getStatus() {
+    public StatusRota getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(StatusRota status) {
         this.status = status;
     }
 }

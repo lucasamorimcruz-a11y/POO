@@ -1,18 +1,20 @@
 package dados;
 import dados.enums.TipoDeManutencao;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Manutencao {
-    private Date dataDaManutencao;
+    private LocalDate dataDaManutencao;
     private TipoDeManutencao tipoDeManutencao;
-    private float quilometragem;
+    private double quilometragem;
     private String descricaoDosServicos;
     private String pecasTrocadas;
     private String oficina;
-    private float valorTotal;
-    private Date proximaManutencao;
+    private double valorTotal;
+    private LocalDate proximaManutencao;
 
-    public Manutencao(Date dataDaManutencao, TipoDeManutencao tipoDeManutencao, float quilometragem, String descricaoDosServicos, String pecasTrocadas, String oficina, float valorTotal, Date proximaManutencao) {
+    public Manutencao(LocalDate dataDaManutencao, TipoDeManutencao tipoDeManutencao, double quilometragem, String descricaoDosServicos, String pecasTrocadas, String oficina, double valorTotal, LocalDate proximaManutencao) {
         this.dataDaManutencao = dataDaManutencao;
         this.tipoDeManutencao = tipoDeManutencao;
         this.quilometragem = quilometragem;
@@ -23,11 +25,11 @@ public class Manutencao {
         this.proximaManutencao = proximaManutencao;
     }
 
-    public Date getDataDaManutencao() {
+    public LocalDate getDataDaManutencao() {
         return dataDaManutencao;
     }
 
-    public void setDataDaManutencao(Date dataDaManutencao) {
+    public void setDataDaManutencao(LocalDate dataDaManutencao) {
         this.dataDaManutencao = dataDaManutencao;
     }
 
@@ -39,11 +41,11 @@ public class Manutencao {
         this.tipoDeManutencao = tipoDeManutencao;
     }
 
-    public float getQuilometragem() {
+    public double getQuilometragem() {
         return quilometragem;
     }
 
-    public void setQuilometragem(float quilometragem) {
+    public void setQuilometragem(double quilometragem) {
         this.quilometragem = quilometragem;
     }
 
@@ -71,19 +73,19 @@ public class Manutencao {
         this.oficina = oficina;
     }
 
-    public float getValorTotal() {
+    public double getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(float valorTotal) {
+    public void setValorTotal(double valorTotal) {
         this.valorTotal = valorTotal;
     }
 
-    public Date getProximaManutencao() {
+    public LocalDate getProximaManutencao() {
         return proximaManutencao;
     }
 
-    public void setProximaManutencao(Date proximaManutencao) {
+    public void setProximaManutencao(LocalDate proximaManutencao) {
         this.proximaManutencao = proximaManutencao;
     }
 }
