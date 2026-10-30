@@ -1,12 +1,14 @@
 package dados;
+import dados.enums.CategoriaCnh;
+
 import java.util.Date;
 
 public class Cnh {
     private String numeroDeCNH;
-    private String categoria;
+    private CategoriaCnh categoria;
     private Date dataDeValidade;
 
-    public Cnh(String numeroDeCNH, String categoria, Date dataDeValidade) {
+    public Cnh(String numeroDeCNH, CategoriaCnh categoria, Date dataDeValidade) {
         this.numeroDeCNH = numeroDeCNH;
         this.categoria = categoria;
         this.dataDeValidade = dataDeValidade;
@@ -20,11 +22,11 @@ public class Cnh {
         this.numeroDeCNH = numeroDeCNH;
     }
 
-    public String getCategoria() {
+    public CategoriaCnh getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(CategoriaCnh categoria) {
         this.categoria = categoria;
     }
 

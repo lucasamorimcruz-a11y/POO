@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Entrega {
-    String nome;
-    String documento;
-    String parentesco;
-    LocalDate dia;
-    LocalDateTime hora;
-    String assinatura;
-    String foto;
+    private String nome;
+    private String documento;
+    private String parentesco;
+    private LocalDate dia;
+    private LocalDateTime hora;
+    private String assinatura;
+    private String foto;
 
     public Entrega(String nome, String documento, String parentesco, LocalDate dia, LocalDateTime hora, String assinatura, String foto) {
         this.nome = nome;

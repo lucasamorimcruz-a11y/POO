@@ -79,4 +79,12 @@ public class Rota {
     public void setQuilometragemFinal(float quilometragemFinal) {
         this.quilometragemFinal = quilometragemFinal;
     }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

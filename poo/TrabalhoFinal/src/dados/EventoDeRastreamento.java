@@ -1,6 +1,7 @@
 package dados;
 
 import dados.enums.Eventos;
+import dados.enums.TipoDeEvento;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -12,15 +13,15 @@ public class EventoDeRastreamento {
     private String localizacao;
     private String descricao;
     private String caminhoDaFoto;
-    private ArrayList<Eventos> eventos;
+    private TipoDeEvento tipo;
 
-    public EventoDeRastreamento(Date data, LocalTime hora, String localizacao, String descricao, String caminhoDaFoto, ArrayList<Eventos> eventos) {
+    public EventoDeRastreamento(Date data, LocalTime hora, String localizacao, String descricao, String caminhoDaFoto, TipoDeEvento evento) {
         this.data = data;
         this.hora = hora;
         this.localizacao = localizacao;
         this.descricao = descricao;
         this.caminhoDaFoto = caminhoDaFoto;
-        this.eventos = eventos;
+        this.tipo = evento;
     }
 
     public Date getData() {
@@ -63,11 +64,11 @@ public class EventoDeRastreamento {
         this.caminhoDaFoto = caminhoDaFoto;
     }
 
-    public ArrayList<Eventos> getEventos() {
-        return eventos;
+    public TipoDeEvento getEventos() {
+        return tipo;
     }
 
-    public void setEventos(ArrayList<Eventos> eventos) {
-        this.eventos = eventos;
+    public void setEventos(TipoDeEvento eventos) {
+        this.tipo = eventos;
     }
 }
