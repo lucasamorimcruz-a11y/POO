@@ -6,13 +6,15 @@ public class Endereco {
     private String bairro;
     private String cidade;
     private String estado;
+    private String pontoDeReferencia;
 
-    public Endereco(int numeroDoLocal, String rua, String bairro, String cidade, String estado) {
+    public Endereco(int numeroDoLocal, String rua, String bairro, String cidade, String estado, String pontoDeReferencia) {
         this.numeroDoLocal = numeroDoLocal;
         this.rua = rua;
         this.bairro = bairro;
         this.cidade = cidade;
         this.estado = estado;
+        this.pontoDeReferencia = pontoDeReferencia;
     }
 
     public int getNumeroDoLocal() {
@@ -53,5 +55,13 @@ public class Endereco {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getPontoDeReferencia() {
+        return pontoDeReferencia;
+    }
+
+    public void setPontoDeReferencia(String pontoDeReferencia) {
+        this.pontoDeReferencia = pontoDeReferencia;
     }
 }

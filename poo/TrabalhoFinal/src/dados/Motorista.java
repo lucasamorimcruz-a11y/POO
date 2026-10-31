@@ -14,7 +14,7 @@ public class Motorista extends PessoaFisica {
     private Situacao situacao;
     private ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis;
 
-    public Motorista (String nome, String endereco, String telefone, String email, String cpf, Cnh cnh, LocalDate dataDeAdmissao, TipoDeVinculo vinculo, Situacao situacao, ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis){
+    public Motorista (String nome, Endereco endereco, String telefone, String email, String cpf, Cnh cnh, LocalDate dataDeAdmissao, TipoDeVinculo vinculo, Situacao situacao, ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis){
         super(nome, endereco, telefone, email, cpf);
         this.cnh = cnh;
         this.dataDeAdmissao = dataDeAdmissao;

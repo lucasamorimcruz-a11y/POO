@@ -3,14 +3,15 @@ package dados;
 import java.time.LocalDateTime;
 
 public class PedidoNaRota {
-    int sequenciaEntrega;
-    LocalDateTime horarioPrevistoDeEntrega;
-    LocalDateTime horarioRealDeEntrega;
+    private int sequenciaEntrega;
+    private Pedido pedido;
+    private LocalDateTime horarioPrevistoDeEntrega;
+    private LocalDateTime horarioRealDeEntrega; // preenchido só quando a entrega acontece
 
-    public PedidoNaRota(int sequenciaEntrega, LocalDateTime horarioPrevistoDeEntrega, LocalDateTime horarioRealDeEntrega) {
+    public PedidoNaRota(int sequenciaEntrega, Pedido pedido, LocalDateTime horarioPrevistoDeEntrega) {
         this.sequenciaEntrega = sequenciaEntrega;
+        this.pedido = pedido;
         this.horarioPrevistoDeEntrega = horarioPrevistoDeEntrega;
-        this.horarioRealDeEntrega = horarioRealDeEntrega;
     }
 
     public int getSequenciaEntrega() {
@@ -19,6 +20,14 @@ public class PedidoNaRota {
 
     public void setSequenciaEntrega(int sequenciaEntrega) {
         this.sequenciaEntrega = sequenciaEntrega;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public LocalDateTime getHorarioPrevistoDeEntrega() {

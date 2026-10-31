@@ -1,7 +1,7 @@
 package dados.enums;
 
 public enum StatusRota {
-    DISPONIVEL("Disponível"),
+    PLANEJADA("Planejada"),
     EM_ANDAMENTO("Em andamento"),
     CONCLUIDA ("Concluida");
 

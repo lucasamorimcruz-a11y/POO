@@ -1,7 +1,7 @@
 package dados.enums;
 
 public enum TipoDeVinculo {
-    CLT ("CLT"), PJ ("PJ");
+    CLT ("CLT"), TERCEIRIZADO ("Terceirizado");
     private String vinculo;
 
     TipoDeVinculo(String vinculo){

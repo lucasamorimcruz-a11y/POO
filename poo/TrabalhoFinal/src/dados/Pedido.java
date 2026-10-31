@@ -27,10 +27,10 @@ public class Pedido {
     private Endereco enderecoDeEntrega;
     private Endereco enderecoDeColeta;
     private Entrega entrega;
-    private ArrayList<Item> itens;
-    private ArrayList<EventoDeRastreamento> eventos;
-    private ArrayList<ConhecimentoTransporte> conhecimentos;
-    private ArrayList<FalhaNaEntrega> falhasNaEntrega;
+    private ArrayList<Item> itens = new ArrayList<>();
+    private ArrayList<EventoDeRastreamento> eventos = new ArrayList<>();
+    private ArrayList<ConhecimentoTransporte> conhecimentos = new ArrayList<>();
+    private ArrayList<FalhaNaEntrega> falhasNaEntrega = new ArrayList<>();
 
 
     public Pedido(int numero, LocalDate dataDeSolicitacao, Cliente cliente,

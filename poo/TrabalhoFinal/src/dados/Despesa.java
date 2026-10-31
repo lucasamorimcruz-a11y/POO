@@ -11,7 +11,7 @@ public class Despesa {
     private double valor;
     private String comprovante;
 
-    public Despesa(LocalDate data, TipoDeDespesa tipoDeDespesa, float valor, String comprovante) {
+    public Despesa(LocalDate data, TipoDeDespesa tipoDeDespesa, double valor, String comprovante) {
         this.data = data;
         this.tipoDeDespesa = tipoDeDespesa;
         this.valor = valor;

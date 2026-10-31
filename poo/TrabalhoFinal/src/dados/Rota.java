@@ -3,26 +3,36 @@ package dados;
 import dados.enums.StatusRota;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Rota {
     private int numero;
     private LocalDate data;
+    private Veiculo veiculoAlocado;
+    private Motorista motoristaResponsavel;
+    private ArrayList<PedidoNaRota> pedidos = new ArrayList<>();
     private double quilometragemInicial;
     private double quilometragemFinal;
-    private StatusRota statusRota;
-    private Veiculo veiculoAlocado;
-    private ArrayList<Pedido> pedidos;
-    private Motorista motoristaResponsavel;
+    private StatusRota status;
+    private ArrayList<Despesa> despesas = new ArrayList<>();
 
-    public Rota(int numero, LocalDate data, Veiculo veiculoAlocado, Motorista motoristaResponsavel, ArrayList<Pedido> pedidos, float quilometragemInicial, float quilometragemFinal) {
+    public Rota(int numero, LocalDate data, Veiculo veiculoAlocado, Motorista motoristaResponsavel) {
         this.numero = numero;
         this.data = data;
         this.veiculoAlocado = veiculoAlocado;
         this.motoristaResponsavel = motoristaResponsavel;
-        this.pedidos = pedidos;
-        this.quilometragemInicial = quilometragemInicial;
-        this.quilometragemFinal = quilometragemFinal;
+        this.status = StatusRota.PLANEJADA;
+    }
+
+    public PedidoNaRota adicionarPedido(Pedido pedido, LocalDateTime horarioPrevisto) {
+        PedidoNaRota parada = new PedidoNaRota(pedidos.size() + 1, pedido, horarioPrevisto);
+        pedidos.add(parada);
+        return parada;
+    }
+
+    public void adicionarDespesa(Despesa despesa) {
+        despesas.add(despesa);
     }
 
     public int getNumero() {
@@ -33,11 +43,11 @@ public class Rota {
         this.numero = numero;
     }
 
-    public String getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
@@ -57,27 +67,27 @@ public class Rota {
         this.motoristaResponsavel = motoristaResponsavel;
     }
 
-    public ArrayList<Pedido> getPedidos() {
+    public ArrayList<PedidoNaRota> getPedidos() {
         return pedidos;
     }
 
-    public void setPedidos(ArrayList<Pedido> pedidos) {
+    public void setPedidos(ArrayList<PedidoNaRota> pedidos) {
         this.pedidos = pedidos;
     }
 
-    public float getQuilometragemInicial() {
+    public double getQuilometragemInicial() {
         return quilometragemInicial;
     }
 
-    public void setQuilometragemInicial(float quilometragemInicial) {
+    public void setQuilometragemInicial(double quilometragemInicial) {
         this.quilometragemInicial = quilometragemInicial;
     }
 
-    public float getQuilometragemFinal() {
+    public double getQuilometragemFinal() {
         return quilometragemFinal;
     }
 
-    public void setQuilometragemFinal(float quilometragemFinal) {
+    public void setQuilometragemFinal(double quilometragemFinal) {
         this.quilometragemFinal = quilometragemFinal;
     }
 
@@ -87,5 +97,13 @@ public class Rota {
 
     public void setStatus(StatusRota status) {
         this.status = status;
+    }
+
+    public ArrayList<Despesa> getDespesas() {
+        return despesas;
+    }
+
+    public void setDespesas(ArrayList<Despesa> despesas) {
+        this.despesas = despesas;
     }
 }

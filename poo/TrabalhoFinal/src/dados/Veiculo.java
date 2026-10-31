@@ -32,7 +32,7 @@ public class Veiculo {
         this.dataProximaManuntencao = dataProximaManuntencao;
         this.tipoDeVeiculo = tipoDeVeiculo;
         this.statusVeiculo = statusVeiculo;
-        this.manutencoes = manutencoes;
+        this.manutencoes = (manutencoes != null) ? manutencoes : new ArrayList<>();
     }
 
     public String getPlaca() {
