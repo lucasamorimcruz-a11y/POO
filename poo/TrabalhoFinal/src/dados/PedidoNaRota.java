@@ -6,7 +6,7 @@ public class PedidoNaRota {
     private int sequenciaEntrega;
     private Pedido pedido;
     private LocalDateTime horarioPrevistoDeEntrega;
-    private LocalDateTime horarioRealDeEntrega; /
+    private LocalDateTime horarioRealDeEntrega; 
 
     public PedidoNaRota(int sequenciaEntrega, Pedido pedido, LocalDateTime horarioPrevistoDeEntrega) {
         this.sequenciaEntrega = sequenciaEntrega;
