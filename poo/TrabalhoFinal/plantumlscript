@@ -14,6 +14,413 @@ skinparam ClassBackgroundColor #FEFEFE
 skinparam PackageBorderColor #3B5B7E
 skinparam PackageFontStyle bold
 hide empty members
+skinparam class {
+  BackgroundColor<<Swing>> #E8EEF7
+  BorderColor<<Swing>> #7C8DA6
+}
+
+
+' =====================================================
+' APRESENTAÇÃO
+' =====================================================
+package "apresentacao" as apresentacao #EEF6EE {
+
+  class JFrame <<Swing>>
+  class JTabbedPane <<Swing>>
+  class JPanel <<Swing>>
+  class AbstractTableModel <<Swing>>
+
+  class Conversor {
+    + {static} texto(campo : JTextField, nome : String) : String
+    + {static} opcional(campo : JTextField) : String
+    + {static} inteiro(campo : JTextField, nome : String) : int
+    + {static} decimal(campo : JTextField, nome : String) : double
+    + {static} data(campo : JTextField, nome : String) : LocalDate
+    + {static} dataOpcional(campo : JTextField, nome : String) : LocalDate
+    + {static} dataHora(campo : JTextField, nome : String) : LocalDateTime
+    + {static} formatar(data : LocalDate) : String
+    + {static} moeda(valor : double) : String
+    + {static} numero(valor : double) : String
+    + {static} textoOuTraco(texto : String) : String
+    + {static} adicionar(painel : JPanel, rotulo : String, componente : JComponent) : void
+    + {static} topo(formulario : JPanel) : JPanel
+    + {static} configurar(tabela : JTable) : void
+    + {static} erro(pai : Component, mensagem : String) : void
+    + {static} info(pai : Component, mensagem : String) : void
+    + {static} confirmar(pai : Component, mensagem : String) : boolean
+  }
+
+  ' ---------- Janela e painel principal ----------
+  class JanelaPrincipal {
+    - sistema : Sistema
+    - painelPrincipal : PainelPrincipal
+    + JanelaPrincipal()
+    + {static} main(args : String[]) : void
+  }
+
+  class PainelPrincipal {
+    - sistema : Sistema
+    - painelClientes : PainelClientes
+    - painelMotoristas : PainelMotoristas
+    - painelVeiculos : PainelVeiculos
+    - painelTabelaPadrao : PainelTabelaPadrao
+    - painelPedidos : PainelPedidos
+    - painelColeta : PainelColeta
+    - painelRotas : PainelRotas
+    - painelEntregas : PainelEntregas
+    - painelRastreamento : PainelRastreamento
+    + PainelPrincipal(sistema : Sistema)
+    + atualizarAbas() : void
+  }
+
+  ' ---------- Painéis reutilizáveis ----------
+  class PainelEndereco {
+    - campoRua : JTextField
+    - campoNumero : JTextField
+    - campoBairro : JTextField
+    - campoCidade : JTextField
+    - campoEstado : JTextField
+    - campoReferencia : JTextField
+    + PainelEndereco(titulo : String)
+    + getEndereco() : Endereco
+    + limpar() : void
+  }
+
+  class PainelTabelaPreco {
+    - campoValorPorKg : JTextField
+    - campoValorPorKm : JTextField
+    - campoValorMinimo : JTextField
+    - campoDesconto : JTextField
+    - camposFatorServico : Map<TipoDeServico, JTextField>
+    - camposFatorRegiao : Map<Regiao, JTextField>
+    + PainelTabelaPreco()
+    + getTabelaPreco() : TabelaPreco
+    + preencher(tabela : TabelaPreco) : void
+    + limpar() : void
+    + setEditavel(editavel : boolean) : void
+  }
+
+  ' ---------- Abas ----------
+  class PainelClientes {
+    - sistema : Sistema
+    - comboTipoPessoa : JComboBox<String>
+    - campoNome : JTextField
+    - campoDocumento : JTextField
+    - campoRazaoSocial : JTextField
+    - campoInscricaoEstadual : JTextField
+    - campoTelefone : JTextField
+    - campoEmail : JTextField
+    - painelEndereco : PainelEndereco
+    - comboTipoCliente : JComboBox<TipoCliente>
+    - campoLimiteCredito : JTextField
+    - painelTabelaPreco : PainelTabelaPreco
+    - botaoCadastrar : JButton
+    - botaoLimpar : JButton
+    - campoBusca : JTextField
+    - botaoBuscar : JButton
+    - tabela : JTable
+    - modeloTabela : TabelaClientes
+    + PainelClientes(sistema : Sistema)
+    + atualizar() : void
+    - atualizarCampos() : void
+    - cadastrar() : void
+    - buscar() : void
+    - limpar() : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  class PainelMotoristas {
+    - sistema : Sistema
+    - campoNome : JTextField
+    - campoCpf : JTextField
+    - campoTelefone : JTextField
+    - campoEmail : JTextField
+    - painelEndereco : PainelEndereco
+    - campoNumeroCnh : JTextField
+    - campoCategoriaCnh : JTextField
+    - campoValidadeCnh : JTextField
+    - campoDataAdmissao : JTextField
+    - comboVinculo : JComboBox<TipoDeVinculo>
+    - comboSituacao : JComboBox<Situacao>
+    - checksTiposDeVeiculo : ArrayList<JCheckBox>
+    - botaoCadastrar : JButton
+    - botaoLimpar : JButton
+    - comboFiltroTipo : JComboBox<TipoDeVeiculo>
+    - botaoFiltrarHabilitados : JButton
+    - botaoTodos : JButton
+    - tabela : JTable
+    - modeloTabela : TabelaMotoristas
+    + PainelMotoristas(sistema : Sistema)
+    + atualizar() : void
+    - cadastrar() : void
+    - filtrarHabilitados() : void
+    - limpar() : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  class PainelVeiculos {
+    - sistema : Sistema
+    - campoPlaca : JTextField
+    - campoMarca : JTextField
+    - campoModelo : JTextField
+    - campoAno : JTextField
+    - comboTipo : JComboBox<TipoDeVeiculo>
+    - campoCapacidadeQuilos : JTextField
+    - campoCapacidadeM3 : JTextField
+    - campoQuilometragem : JTextField
+    - campoDataAquisicao : JTextField
+    - campoProximaManutencao : JTextField
+    - botaoCadastrar : JButton
+    - botaoLimpar : JButton
+    - comboFiltroTipo : JComboBox<TipoDeVeiculo>
+    - botaoDisponiveis : JButton
+    - botaoManutencaoPendente : JButton
+    - botaoTodos : JButton
+    - comboTipoManutencao : JComboBox<TipoDeManutencao>
+    - campoServicos : JTextField
+    - campoPecas : JTextField
+    - campoOficina : JTextField
+    - campoValorManutencao : JTextField
+    - campoProximaData : JTextField
+    - botaoRegistrarManutencao : JButton
+    - tabela : JTable
+    - modeloTabela : TabelaVeiculos
+    + PainelVeiculos(sistema : Sistema)
+    + atualizar() : void
+    - cadastrar() : void
+    - listarDisponiveis() : void
+    - listarManutencaoPendente() : void
+    - registrarManutencao() : void
+    - limpar() : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  class PainelTabelaPadrao {
+    - sistema : Sistema
+    - painelTabelaPreco : PainelTabelaPreco
+    - botaoSalvar : JButton
+    + PainelTabelaPadrao(sistema : Sistema)
+    + atualizar() : void
+    - salvar() : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  class PainelPedidos {
+    - sistema : Sistema
+    - comboCliente : JComboBox<Cliente>
+    - painelColeta : PainelEndereco
+    - painelEntrega : PainelEndereco
+    - campoContatoColeta : JTextField
+    - campoDataColeta : JTextField
+    - comboPeriodo : JComboBox<Periodo>
+    - campoDescricao : JTextField
+    - campoValorDeclarado : JTextField
+    - campoContatoDestino : JTextField
+    - comboServico : JComboBox<TipoDeServico>
+    - comboPagamento : JComboBox<FormaDePagamento>
+    - botaoCriar : JButton
+    - campoEmbalagem : JTextField
+    - campoPesoItem : JTextField
+    - campoDimensoes : JTextField
+    - campoDescricaoItem : JTextField
+    - botaoAdicionarItem : JButton
+    - campoDistancia : JTextField
+    - comboRegiao : JComboBox<Regiao>
+    - botaoCalcularFrete : JButton
+    - rotuloFrete : JLabel
+    - botaoCancelar : JButton
+    - tabela : JTable
+    - modeloTabela : TabelaPedidos
+    - tabelaItens : JTable
+    - modeloItens : TabelaItens
+    + PainelPedidos(sistema : Sistema)
+    + atualizar() : void
+    - criarPedido() : void
+    - adicionarItem() : void
+    - calcularFrete() : void
+    - cancelarPedido() : void
+    - limpar() : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  class PainelColeta {
+    - sistema : Sistema
+    - campoLocal : JTextField
+    - campoNotaFiscal : JTextField
+    - botaoRegistrarColeta : JButton
+    - rotuloConhecimento : JLabel
+    - tabela : JTable
+    - modeloTabela : TabelaPedidos
+    + PainelColeta(sistema : Sistema)
+    + atualizar() : void
+    - registrarColeta() : void
+    - mostrarConhecimento() : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  class PainelRotas {
+    - sistema : Sistema
+    - campoData : JTextField
+    - comboVeiculo : JComboBox<Veiculo>
+    - comboMotorista : JComboBox<Motorista>
+    - botaoCriarRota : JButton
+    - comboPedido : JComboBox<Pedido>
+    - campoHorarioPrevisto : JTextField
+    - botaoAdicionarPedido : JButton
+    - campoKm : JTextField
+    - botaoIniciar : JButton
+    - botaoConcluir : JButton
+    - comboTipoDespesa : JComboBox<TipoDeDespesa>
+    - campoDataDespesa : JTextField
+    - campoValorDespesa : JTextField
+    - campoComprovante : JTextField
+    - botaoRegistrarDespesa : JButton
+    - tabelaRotas : JTable
+    - modeloRotas : TabelaRotas
+    - tabelaParadas : JTable
+    - modeloParadas : TabelaParadas
+    - tabelaDespesas : JTable
+    - modeloDespesas : TabelaDespesas
+    + PainelRotas(sistema : Sistema)
+    + atualizar() : void
+    - criarRota() : void
+    - adicionarPedido() : void
+    - iniciarRota() : void
+    - concluirRota() : void
+    - registrarDespesa() : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  class PainelEntregas {
+    - sistema : Sistema
+    - campoNomeRecebedor : JTextField
+    - campoDocumento : JTextField
+    - campoParentesco : JTextField
+    - campoAssinatura : JTextField
+    - botaoRegistrarEntrega : JButton
+    - campoMotivo : JTextField
+    - checkNovaTentativa : JCheckBox
+    - botaoRegistrarFalha : JButton
+    - comboTipoEvento : JComboBox<TipoDeEvento>
+    - campoLocalEvento : JTextField
+    - campoDescricaoEvento : JTextField
+    - campoFoto : JTextField
+    - botaoRegistrarEvento : JButton
+    - tabela : JTable
+    - modeloTabela : TabelaPedidos
+    + PainelEntregas(sistema : Sistema)
+    + atualizar() : void
+    - registrarEntrega() : void
+    - registrarFalha() : void
+    - registrarEvento() : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  class PainelRastreamento {
+    - sistema : Sistema
+    - campoNumeroPedido : JTextField
+    - botaoRastrear : JButton
+    - rotuloStatus : JLabel
+    - tabela : JTable
+    - modeloTabela : TabelaEventos
+    + PainelRastreamento(sistema : Sistema)
+    + atualizar() : void
+    - rastrear() : void
+    - mostrar(numero : int) : void
+    + actionPerformed(evento : ActionEvent) : void
+  }
+
+  ' ---------- Modelos de tabela ----------
+  class TabelaClientes {
+    - colunas : String[]
+    - clientes : ArrayList<Cliente>
+    + setClientes(clientes : Arr ayList<Cliente>) : void
+    + getCliente(linha : int) : Cliente
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+  class TabelaMotoristas {
+    - colunas : String[]
+    - motoristas : ArrayList<Motorista>
+    + setMotoristas(motoristas : ArrayList<Motorista>) : void
+    + getMotorista(linha : int) : Motorista
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+  class TabelaVeiculos {
+    - colunas : String[]
+    - veiculos : ArrayList<Veiculo>
+    + setVeiculos(veiculos : ArrayList<Veiculo>) : void
+    + getVeiculo(linha : int) : Veiculo
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+  class TabelaPedidos {
+    - colunas : String[]
+    - pedidos : ArrayList<Pedido>
+    + setPedidos(pedidos : ArrayList<Pedido>) : void
+    + getPedido(linha : int) : Pedido
+    + getLinha(pedido : Pedido) : int
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+  class TabelaItens {
+    - colunas : String[]
+    - itens : ArrayList<Item>
+    + setItens(itens : ArrayList<Item>) : void
+    + getItem(linha : int) : Item
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+  class TabelaRotas {
+    - colunas : String[]
+    - rotas : ArrayList<Rota>
+    + setRotas(rotas : ArrayList<Rota>) : void
+    + getRota(linha : int) : Rota
+    + getLinha(rota : Rota) : int
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+  class TabelaParadas {
+    - colunas : String[]
+    - paradas : ArrayList<PedidoNaRota>
+    + setParadas(paradas : ArrayList<PedidoNaRota>) : void
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+  class TabelaDespesas {
+    - colunas : String[]
+    - despesas : ArrayList<Despesa>
+    + setDespesas(despesas : ArrayList<Despesa>) : void
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+  class TabelaEventos {
+    - colunas : String[]
+    - eventos : ArrayList<EventoDeRastreamento>
+    + setEventos(eventos : ArrayList<EventoDeRastreamento>) : void
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getColumnName(coluna : int) : String
+    + getValueAt(linha : int, coluna : int) : Object
+  }
+}
 
 ' =====================================================
 ' NEGÓCIO
@@ -28,6 +435,7 @@ package "negocio" as negocio #E6F0FA {
     - conhecimentos : List<ConhecimentoTransporte>
     - tabelaPadrao : TabelaPreco
     --
+    + Sistema()
     + cadastrarCliente(cliente : Cliente) : void
     + cadastrarMotorista(motorista : Motorista) : void
     + cadastrarVeiculo(veiculo : Veiculo) : void
@@ -35,6 +443,9 @@ package "negocio" as negocio #E6F0FA {
     + buscarMotorista(cpf : String) : Motorista
     + buscarVeiculo(placa : String) : Veiculo
     + buscarPedido(numero : int) : Pedido
+    + buscarRota(numero : int) : Rota
+    + pedidosComStatus(status : StatusPedido) : ArrayList<Pedido>
+    + rotasComStatus(status : StatusRota) : ArrayList<Rota>
     + criarPedido(cliente : Cliente, coleta : Endereco, contatoColeta : String, dataColeta : LocalDate, periodo : Periodo, descricao : String, valorDeclarado : double, entrega : Endereco, contatoDestino : String, tipo : TipoDeServico, formaDePagamento : FormaDePagamento) : Pedido
     + adicionarItem(pedido : Pedido, item : Item) : void
     + calcularFrete(pedido : Pedido, distanciaKm : double, regiao : Regiao) : double
@@ -46,11 +457,11 @@ package "negocio" as negocio #E6F0FA {
     + adicionarPedidoARota(rota : Rota, pedido : Pedido, horarioPrevisto : LocalDateTime) : void
     + iniciarRota(rota : Rota, kmInicial : double) : void
     + concluirRota(rota : Rota, kmFinal : double) : void
-    + registrarDespesa(rota : Rota, data : LocalDate, tipo : TipoDespesa, valor : double, comprovante : String) : void
-    + registrarEvento(pedido : Pedido, tipo : TipoEvento, local : String, descricao : String, foto : String) : void
+    + registrarDespesa(rota : Rota, data : LocalDate, tipo : TipoDeDespesa, valor : double, comprovante : String) : void
+    + registrarEvento(pedido : Pedido, tipo : TipoDeEvento, local : String, descricao : String, foto : String) : void
     + registrarEntrega(pedido : Pedido, nome : String, documento : String, parentesco : String, assinatura : String) : void
     + registrarFalhaNaEntrega(pedido : Pedido, motivo : String, novaTentativa : boolean) : void
-    + rastrear(numeroPedido : int) : List<EventoRastreamento>
+    + rastrear(numeroPedido : int) : List<EventoDeRastreamento>
     + registrarManutencao(veiculo : Veiculo, tipo : TipoDeManutencao, servico : String, pecas : String, oficina : String, valor : double, proxima : LocalDate) : void
     + veiculosComManutencaoPendente() : List<Veiculo>
     + veiculosDisponiveis(tipo : TipoDeVeiculo) : List<Veiculo>
@@ -69,6 +480,8 @@ package "dados" as dados #F5F7FA {
     - endereco : Endereco
     - telefone : String
     - email : String
+    --
+    + {abstract} getDocumento() : String
   }
   class PessoaFisica {
     - cpf : String
@@ -88,7 +501,7 @@ package "dados" as dados #F5F7FA {
   }
   class Cliente {
     - pessoa : Pessoa
-    - tipo : TipoDeCliente
+    - tipo : TipoCliente
     - tabelaPreco : TabelaPreco
     - limiteDeCredito : double
   }
@@ -162,7 +575,7 @@ package "dados" as dados #F5F7FA {
     - formaDePagamento : FormaDePagamento
     - status : StatusPedido
     - itens : List<Item>
-    - eventos : List<EventoRastreamento>
+    - eventos : List<EventoDeRastreamento>
     - entrega : Entrega
     - falhas : List<FalhaNaEntrega>
     - conhecimento : ConhecimentoTransporte
@@ -185,8 +598,8 @@ package "dados" as dados #F5F7FA {
     - valorSeguro : double
     - notaFiscal : String
   }
-  class EventoRastreamento {
-    - tipo : TipoEvento
+  class EventoDeRastreamento {
+    - tipo : TipoDeEvento
     - data : LocalDate
     - hora : LocalTime
     - localizacao : String
@@ -226,14 +639,14 @@ package "dados" as dados #F5F7FA {
   }
   class Despesa {
     - data : LocalDate
-    - tipo : TipoDespesa
+    - tipo : TipoDeDespesa
     - valor : double
     - comprovante : String
   }
 
   ' ---------- Enums ----------
   package "enums" as enums #FFF3DC {
-    enum TipoDeCliente {
+    enum TipoCliente {
       EVENTUAL
       CONTRATADO
     }
@@ -286,7 +699,7 @@ package "dados" as dados #F5F7FA {
       EM_ANDAMENTO
       CONCLUIDA
     }
-    enum TipoEvento {
+    enum TipoDeEvento {
       COLETA_REALIZADA
       CARGA_EM_TRANSITO
       SAIU_PARA_ENTREGA
@@ -299,7 +712,7 @@ package "dados" as dados #F5F7FA {
       PREVENTIVA
       CORRETIVA
     }
-    enum TipoDespesa {
+    enum TipoDeDespesa {
       COMBUSTIVEL
       PEDAGIO
       ALIMENTACAO
@@ -309,7 +722,7 @@ package "dados" as dados #F5F7FA {
       LOCAL
       ESTADUAL
       INTERESTADUAL
-      OUTRA
+      OUTRO
     }
   }
 }
@@ -335,7 +748,7 @@ Veiculo "1" *-down- "0..*" Manutencao
 Pedido "0..*" -right-> "1" Cliente
 Pedido "0..*" -down-> "2" Endereco
 Pedido "1" *-down- "1..*" Item
-Pedido "1" *-down- "0..*" EventoRastreamento
+Pedido "1" *-down- "0..*" EventoDeRastreamento
 Pedido "1" *-down- "0..1" Entrega
 Pedido "1" *-down- "0..*" FalhaNaEntrega
 Pedido "1" -down- "0..1" ConhecimentoTransporte
@@ -348,7 +761,7 @@ PedidoNaRota "0..*" -left-> "1" Pedido
 Rota "1" *-down- "0..*" Despesa
 
 ' --- Relações com enums ---
-Cliente -down-> TipoDeCliente
+Cliente -down-> TipoCliente
 Veiculo -down-> TipoDeVeiculo
 Veiculo -down-> StatusVeiculo
 Motorista -down-> TipoDeVinculo
@@ -360,25 +773,93 @@ Pedido -down-> TipoDeServico
 Pedido -down-> FormaDePagamento
 Pedido -down-> StatusPedido
 Rota -down-> StatusRota
-Despesa -down-> TipoDespesa
-EventoRastreamento -down-> TipoEvento
+Despesa -down-> TipoDeDespesa
+EventoDeRastreamento -down-> TipoDeEvento
 TabelaPreco -down-> TipoDeServico
 TabelaPreco -down-> Regiao
 
 ' --- Enums em fila (uma linha só) ---
 Cnh -[hidden]down- TipoDeVinculo
-TipoDeCliente -[hidden]right- TipoDeVinculo
+TipoCliente -[hidden]right- TipoDeVinculo
 TipoDeVinculo -[hidden]right- Situacao
 Situacao -[hidden]right- TipoDeVeiculo
 TipoDeVeiculo -[hidden]right- StatusVeiculo
 StatusVeiculo -[hidden]right- TipoDeManutencao
-TipoDeManutencao -[hidden]right- TipoDespesa
-TipoDespesa -[hidden]right- StatusRota
-StatusRota -[hidden]right- TipoEvento
-TipoEvento -[hidden]right- Periodo
+TipoDeManutencao -[hidden]right- TipoDeDespesa
+TipoDeDespesa -[hidden]right- StatusRota
+StatusRota -[hidden]right- TipoDeEvento
+TipoDeEvento -[hidden]right- Periodo
 Periodo -[hidden]right- TipoDeServico
 TipoDeServico -[hidden]right- FormaDePagamento
 FormaDePagamento -[hidden]right- StatusPedido
 StatusPedido -[hidden]right- Regiao
 
+' =====================================================
+' RELACIONAMENTOS DA APRESENTAÇÃO
+' =====================================================
+apresentacao .down.> negocio : usa
+
+JFrame <|-- JanelaPrincipal
+JTabbedPane <|-- PainelPrincipal
+JanelaPrincipal *-- PainelPrincipal : painelPrincipal
+
+PainelPrincipal *-- PainelClientes
+PainelPrincipal *-- PainelMotoristas
+PainelPrincipal *-- PainelVeiculos
+PainelPrincipal *-- PainelTabelaPadrao
+PainelPrincipal *-- PainelPedidos
+PainelPrincipal *-- PainelColeta
+PainelPrincipal *-- PainelRotas
+PainelPrincipal *-- PainelEntregas
+PainelPrincipal *-- PainelRastreamento
+
+JPanel <|-- PainelClientes
+JPanel <|-- PainelMotoristas
+JPanel <|-- PainelVeiculos
+JPanel <|-- PainelTabelaPadrao
+JPanel <|-- PainelPedidos
+JPanel <|-- PainelColeta
+JPanel <|-- PainelRotas
+JPanel <|-- PainelEntregas
+JPanel <|-- PainelRastreamento
+JPanel <|-- PainelEndereco
+JPanel <|-- PainelTabelaPreco
+
+PainelClientes *-- PainelEndereco
+PainelClientes *-- PainelTabelaPreco
+PainelMotoristas *-- PainelEndereco
+PainelPedidos *-- PainelEndereco : 2
+PainelTabelaPadrao *-- PainelTabelaPreco
+
+AbstractTableModel <|-- TabelaClientes
+AbstractTableModel <|-- TabelaMotoristas
+AbstractTableModel <|-- TabelaVeiculos
+AbstractTableModel <|-- TabelaPedidos
+AbstractTableModel <|-- TabelaItens
+AbstractTableModel <|-- TabelaRotas
+AbstractTableModel <|-- TabelaParadas
+AbstractTableModel <|-- TabelaDespesas
+AbstractTableModel <|-- TabelaEventos
+
+PainelClientes *-- TabelaClientes : modeloTabela
+PainelMotoristas *-- TabelaMotoristas : modeloTabela
+PainelVeiculos *-- TabelaVeiculos : modeloTabela
+PainelPedidos *-- TabelaPedidos : modeloTabela
+PainelPedidos *-- TabelaItens : modeloItens
+PainelColeta *-- TabelaPedidos : modeloTabela
+PainelEntregas *-- TabelaPedidos : modeloTabela
+PainelRotas *-- TabelaRotas : modeloRotas
+PainelRotas *-- TabelaParadas : modeloParadas
+PainelRotas *-- TabelaDespesas : modeloDespesas
+PainelRastreamento *-- TabelaEventos : modeloTabela
+
+' --- Posicionamento: apresentacao em cima, negocio no meio, dados embaixo ---
+TabelaEventos -[hidden]down- Sistema
+TabelaRotas -[hidden]down- Sistema
+TabelaPedidos -[hidden]down- Sistema
+TabelaClientes -[hidden]down- Sistema
+TabelaVeiculos -[hidden]down- Sistema
+TabelaMotoristas -[hidden]down- Sistema
+PainelEndereco -[hidden]down- Sistema
+PainelTabelaPreco -[hidden]down- Sistema
 @enduml
