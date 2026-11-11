@@ -71,4 +71,26 @@ public class Motorista extends PessoaFisica {
     public void setTipoDeVeiculosDisponiveis(ArrayList<TipoDeVeiculo> tipoDeVeiculosDisponiveis) {
         this.tipoDeVeiculosDisponiveis = tipoDeVeiculosDisponiveis;
     }
+
+    @Override
+    public String toString() {
+        return getNome() + " - " + getCPF();
+    }
+
+    // Dois motoristas são o mesmo se tiverem o mesmo CPF (ignorando pontuação).
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Motorista outro)) return false;
+        return chave().equals(outro.chave());
+    }
+
+    @Override
+    public int hashCode() {
+        return chave().hashCode();
+    }
+
+    private String chave() {
+        String cpf = getCPF();
+        return cpf == null ? "" : cpf.replaceAll("[^0-9A-Za-z]", "").toUpperCase();
+    }
 }

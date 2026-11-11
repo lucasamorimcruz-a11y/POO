@@ -2,11 +2,11 @@ package dados;
 
 public abstract class Pessoa {
     private String nome;
-    private String endereco;
+    private Endereco endereco;
     private String telefone;
     private String email;
 
-    public Pessoa(String nome, String endereco, String telefone, String email) {
+    public Pessoa(String nome, Endereco endereco, String telefone, String email) {
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
@@ -21,11 +21,11 @@ public abstract class Pessoa {
         this.nome = nome;
     }
 
-    public String getEndereco() {
+    public Endereco getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
 
@@ -44,4 +44,6 @@ public abstract class Pessoa {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public abstract String getDocumento();
 }

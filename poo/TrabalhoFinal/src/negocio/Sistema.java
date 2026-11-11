@@ -8,9 +8,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class Sistema {
 
+    // Alíquota aplicada sobre o frete no conhecimento de transporte (ajuste se a disciplina definir outra regra).
     private static final double ALIQUOTA_IMPOSTOS = 0.12;
     private static final String BASE = "Base da transportadora";
 
@@ -26,6 +29,25 @@ public class Sistema {
     private int proximoNumeroRota = 1;
     private int proximoNumeroConhecimento = 1;
 
+    // Começa com uma tabela de preços padrão; ela pode ser alterada na aba "Tabela de preços".
+    public Sistema() {
+        Map<TipoDeServico, Double> fatoresServico = new EnumMap<>(TipoDeServico.class);
+        fatoresServico.put(TipoDeServico.ECONOMICO, 1.0);
+        fatoresServico.put(TipoDeServico.EXPRESSO, 1.5);
+        fatoresServico.put(TipoDeServico.AGENDADO, 1.2);
+
+        Map<Regiao, Double> fatoresRegiao = new EnumMap<>(Regiao.class);
+        fatoresRegiao.put(Regiao.LOCAL, 1.0);
+        fatoresRegiao.put(Regiao.ESTADUAL, 1.3);
+        fatoresRegiao.put(Regiao.INTERESTADUAL, 1.8);
+        fatoresRegiao.put(Regiao.OUTRO, 2.0);
+
+        tabelaPadrao = new TabelaPreco(2.0, 1.0, 50.0, 0.10, fatoresServico, fatoresRegiao);
+    }
+
+    // =====================================================
+    // CADASTROS E BUSCAS
+    // =====================================================
 
     public void cadastrarCliente (Cliente cliente){
         if (cliente == null || cliente.getPessoa() == null) {
@@ -122,6 +144,18 @@ public class Sistema {
         return null;
     }
 
+    public Rota buscarRota (int numero){
+        for (Rota rota : rotas) {
+            if (rota.getNumero() == numero) {
+                return rota;
+            }
+        }
+        return null;
+    }
+
+    // =====================================================
+    // PEDIDOS
+    // =====================================================
 
     public Pedido criarPedido (Cliente cliente, Endereco coleta, String contatoColeta, LocalDate dataColeta, Periodo periodo, String descricao, double valorDeclarado, Endereco entrega, String contatoDestino, TipoDeServico tipo, FormaDePagamento formaDePagamento){
         if (cliente == null || !clientes.contains(cliente)) {
@@ -141,7 +175,9 @@ public class Sistema {
         }
 
         LocalDate prazoDeEntrega = dataColeta.plusDays(diasDePrazo(tipo));
-        Pedido pedido = new Pedido(proximoNumeroPedido++, LocalDate.now(), cliente, coleta, contatoColeta, dataColeta, periodo, descricao, valorDeclarado, entrega, contatoDestino, prazoDeEntrega, tipo, formaDePagamento);
+        Pedido pedido = new Pedido(proximoNumeroPedido++, LocalDate.now(), cliente, coleta, contatoColeta,
+                dataColeta, periodo, descricao, valorDeclarado, entrega, contatoDestino,
+                prazoDeEntrega, tipo, formaDePagamento);
         pedidos.add(pedido);
         return pedido;
     }
@@ -157,6 +193,7 @@ public class Sistema {
         pedido.adicionarItem(item);
     }
 
+    // Calcula o frete pela tabela do cliente contratado (ou a tabela padrão) e grava no pedido.
     public double calcularFrete (Pedido pedido, double distanciaKm, Regiao regiao){
         exigirPedidoCadastrado(pedido);
         if (pedido.getStatusPedido() != StatusPedido.PENDENTE) {
@@ -201,6 +238,29 @@ public class Sistema {
         return resultado;
     }
 
+    public ArrayList<Pedido> pedidosComStatus (StatusPedido status){
+        ArrayList<Pedido> resultado = new ArrayList<>();
+        for (Pedido pedido : pedidos) {
+            if (pedido.getStatusPedido() == status) {
+                resultado.add(pedido);
+            }
+        }
+        return resultado;
+    }
+
+    public ArrayList<Rota> rotasComStatus (StatusRota status){
+        ArrayList<Rota> resultado = new ArrayList<>();
+        for (Rota rota : rotas) {
+            if (rota.getStatus() == status) {
+                resultado.add(rota);
+            }
+        }
+        return resultado;
+    }
+
+    // =====================================================
+    // COLETA E CONHECIMENTO DE TRANSPORTE
+    // =====================================================
 
     public ConhecimentoTransporte registrarColeta (Pedido pedido, String local, String notaFiscal){
         exigirPedidoCadastrado(pedido);
@@ -213,8 +273,21 @@ public class Sistema {
         if (local == null || local.isBlank() || notaFiscal == null || notaFiscal.isBlank()) {
             throw new IllegalArgumentException("Informe o local da coleta e a nota fiscal.");
         }
+
         double frete = pedido.getValorFrete();
-        ConhecimentoTransporte conhecimento = new ConhecimentoTransporte(proximoNumeroConhecimento++, LocalDate.now(), pedido.getCliente().getPessoa().getNome(), pedido.getContatoNoDestino(), pedido.getDescricaoDaCarga(), (float) frete, (float) (frete * ALIQUOTA_IMPOSTOS), false, 0f, notaFiscal, pedido);
+        ConhecimentoTransporte conhecimento = new ConhecimentoTransporte(
+                proximoNumeroConhecimento++,
+                LocalDate.now(),
+                pedido.getCliente().getPessoa().getNome(),
+                pedido.getContatoNoDestino(),
+                pedido.getDescricaoDaCarga(),
+                (float) frete,
+                (float) (frete * ALIQUOTA_IMPOSTOS),
+                false,   // seguro não contratado por padrão (use setSeguroContratado/setValorSeguro se houver)
+                0f,
+                notaFiscal,
+                pedido);
+
         conhecimentos.add(conhecimento);
         pedido.getConhecimentos().add(conhecimento);
         registrarEvento(pedido, TipoDeEvento.COLETA_REALIZADA, local, "Coleta realizada. Nota fiscal " + notaFiscal, null);
@@ -230,6 +303,9 @@ public class Sistema {
         return null;
     }
 
+    // =====================================================
+    // ROTAS
+    // =====================================================
 
     public Rota criarRota (LocalDate data, Veiculo veiculo, Motorista motorista){
         if (data == null || data.isBefore(LocalDate.now())) {
@@ -262,6 +338,7 @@ public class Sistema {
                 throw new IllegalStateException("Veículo ou motorista já alocado em outra rota nesta data.");
             }
         }
+
         Rota rota = new Rota(proximoNumeroRota++, data, veiculo, motorista);
         rotas.add(rota);
         return rota;
@@ -349,6 +426,11 @@ public class Sistema {
         rota.adicionarDespesa(new Despesa(data, tipo, valor, comprovante));
     }
 
+    // =====================================================
+    // RASTREAMENTO, ENTREGA E FALHA
+    // =====================================================
+
+    // Registra o evento e avança o status do pedido (o status nunca volta para trás).
     public void registrarEvento (Pedido pedido, TipoDeEvento tipo, String local, String descricao, String foto){
         exigirPedidoCadastrado(pedido);
         if (tipo == null || local == null || local.isBlank()) {
@@ -394,6 +476,7 @@ public class Sistema {
                 "Entregue a " + nome, assinatura);
     }
 
+    // Sem nova tentativa o pedido é encerrado como CANCELADO (único status final disponível para falhas).
     public void registrarFalhaNaEntrega (Pedido pedido, String motivo, boolean novaTentativa){
         exigirPedidoCadastrado(pedido);
         if (pedido.getStatusPedido() != StatusPedido.EM_TRANSITO) {
@@ -409,6 +492,7 @@ public class Sistema {
         }
     }
 
+    // Devolve os eventos em ordem cronológica.
     public ArrayList<EventoDeRastreamento> rastrear (int numeroDoPedido){
         Pedido pedido = buscarPedido(numeroDoPedido);
         if (pedido == null) {
@@ -420,6 +504,9 @@ public class Sistema {
         return eventos;
     }
 
+    // =====================================================
+    // MANUTENÇÃO E CONSULTAS DA FROTA
+    // =====================================================
 
     public void registrarManutencao (Veiculo veiculo, TipoDeManutencao tipo,String servico, String pecas, String oficina, double valor, LocalDate proximaManutencao){
         if (veiculo == null || !veiculos.contains(veiculo)) {
@@ -442,6 +529,7 @@ public class Sistema {
         }
     }
 
+    // Manutenção pendente = data da próxima manutenção é hoje ou já passou.
     public ArrayList<Veiculo> veiculosComManutencaoPendente (){
         ArrayList<Veiculo> resultado = new ArrayList<>();
         for (Veiculo veiculo : veiculos) {
@@ -475,6 +563,10 @@ public class Sistema {
         return resultado;
     }
 
+    // =====================================================
+    // MÉTODOS AUXILIARES (privados)
+    // =====================================================
+
     private String documentoDe(Pessoa pessoa) {
         if (pessoa instanceof PessoaFisica fisica) {
             return fisica.getCPF();
@@ -485,6 +577,7 @@ public class Sistema {
         return null;
     }
 
+    // Deixa só os dígitos, para "123.456.789-00" e "12345678900" serem o mesmo documento.
     private String normalizar(String documento) {
         return documento == null ? null : documento.replaceAll("\\D", "");
     }
@@ -495,6 +588,7 @@ public class Sistema {
                 && !motorista.getCnh().getDataDeValidade().isBefore(data);
     }
 
+    // Prazo de entrega, em dias a partir da coleta, conforme o tipo de serviço.
     private int diasDePrazo(TipoDeServico tipo) {
         return switch (tipo) {
             case EXPRESSO -> 1;
@@ -518,7 +612,8 @@ public class Sistema {
         if (endereco == null) {
             return "Endereço de entrega";
         }
-        return endereco.getRua() + ", " + endereco.getNumeroDoLocal() + " - " + endereco.getCidade() + "/" + endereco.getEstado();
+        return endereco.getRua() + ", " + endereco.getNumeroDoLocal() + " - "
+                + endereco.getCidade() + "/" + endereco.getEstado();
     }
 
     private void exigirPedidoCadastrado(Pedido pedido) {
@@ -532,6 +627,10 @@ public class Sistema {
             throw new IllegalArgumentException("Rota não cadastrada.");
         }
     }
+
+    // =====================================================
+    // GETTERS E SETTERS
+    // =====================================================
 
     public ArrayList<Cliente> getClientes() {
         return clientes;
