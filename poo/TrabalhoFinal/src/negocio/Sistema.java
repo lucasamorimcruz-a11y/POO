@@ -3,6 +3,7 @@ package negocio;
 import dados.*;
 import dados.enums.*;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -53,12 +54,29 @@ public class Sistema {
         if (cliente == null || cliente.getPessoa() == null) {
             throw new IllegalArgumentException("Cliente inválido.");
         }
-        String documento = normalizar(documentoDe(cliente.getPessoa()));
-        if (documento == null || documento.isEmpty()) {
+        Pessoa pessoa = cliente.getPessoa();
+        if (pessoa.getNome() == null || pessoa.getNome().isBlank()) {
+            throw new IllegalArgumentException("O cliente precisa ter nome.");
+        }
+        String bruto = documentoDe(pessoa);
+        if (bruto == null || bruto.isBlank()) {
             throw new IllegalArgumentException("O cliente precisa ter CPF ou CNPJ.");
+        }
+        boolean juridica = pessoa instanceof PessoaJuridica;
+        int digitosEsperados = juridica ? 14 : 11;
+        String documento = normalizar(bruto);
+        if (!bruto.matches("[\\d.\\-/\\s]+") || documento.length() != digitosEsperados) {
+            throw new IllegalArgumentException((juridica ? "CNPJ" : "CPF") + " inválido: informe " + digitosEsperados + " dígitos.");
         }
         if (buscarCliente(documento) != null) {
             throw new IllegalArgumentException("Já existe um cliente com este documento.");
+        }
+        String email = pessoa.getEmail();
+        if (email != null && !email.isBlank() && !email.trim().matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) {
+            throw new IllegalArgumentException("E-mail inválido.");
+        }
+        if (cliente.getLimiteDeCredito() < 0) {
+            throw new IllegalArgumentException("O limite de crédito não pode ser negativo.");
         }
         if (cliente.getTipoCliente() == TipoCliente.CONTRATADO && cliente.getTabelaDePreco() == null) {
             throw new IllegalArgumentException("Cliente contratado precisa de tabela de preços.");
@@ -93,6 +111,9 @@ public class Sistema {
         if (buscarVeiculo(veiculo.getPlaca()) != null) {
             throw new IllegalArgumentException("Já existe um veículo com esta placa.");
         }
+        if (veiculo.getCapacidadeEmMetroCubicos() <= 0) {
+            throw new IllegalArgumentException("A capacidade em m³ deve ser maior que zero.");
+        }
         veiculos.add(veiculo);
     }
 
@@ -108,6 +129,34 @@ public class Sistema {
             }
         }
         return null;
+    }
+
+    // Pesquisa para a tela de clientes: por nome, razão social ou parte do CPF/CNPJ.
+    // Ignora maiúsculas e acentos; termo vazio devolve todos os clientes.
+    public ArrayList<Cliente> pesquisarClientes (String termo){
+        ArrayList<Cliente> resultado = new ArrayList<>();
+        String texto = termo == null ? "" : termo.trim();
+        if (texto.isEmpty()) {
+            resultado.addAll(clientes);
+            return resultado;
+        }
+        String buscaTexto = semAcento(texto);
+        String buscaDigitos = normalizar(texto);
+        for (Cliente cliente : clientes) {
+            Pessoa pessoa = cliente.getPessoa();
+            boolean achou = semAcento(pessoa.getNome()).contains(buscaTexto);
+            if (!achou && pessoa instanceof PessoaJuridica juridica) {
+                achou = semAcento(juridica.getRazaoSocial()).contains(buscaTexto);
+            }
+            if (!achou && !buscaDigitos.isEmpty()) {
+                String documento = normalizar(documentoDe(pessoa));
+                achou = documento != null && documento.contains(buscaDigitos);
+            }
+            if (achou) {
+                resultado.add(cliente);
+            }
+        }
+        return resultado;
     }
 
     public Motorista buscarMotorista (String cpf) {
@@ -184,8 +233,8 @@ public class Sistema {
 
     public void adicionarItem (Pedido pedido, Item item){
         exigirPedidoCadastrado(pedido);
-        if (item == null || item.getPeso() <= 0) {
-            throw new IllegalArgumentException("Item inválido: o peso deve ser maior que zero.");
+        if (item == null || item.getPeso() <= 0 || item.getDimensao() <= 0) {
+            throw new IllegalArgumentException("Item inválido: peso e dimensões (m³) devem ser maiores que zero.");
         }
         if (pedido.getStatusPedido() != StatusPedido.PENDENTE) {
             throw new IllegalStateException("Só é possível adicionar itens a pedidos pendentes.");
@@ -262,7 +311,7 @@ public class Sistema {
     // COLETA E CONHECIMENTO DE TRANSPORTE
     // =====================================================
 
-    public ConhecimentoTransporte registrarColeta (Pedido pedido, String local, String notaFiscal){
+    public ConhecimentoTransporte registrarColeta (Pedido pedido, String local, String notaFiscal, String destinatario, boolean seguroContratado, double valorSeguro){
         exigirPedidoCadastrado(pedido);
         if (pedido.getStatusPedido() != StatusPedido.PENDENTE) {
             throw new IllegalStateException("A coleta só pode ser registrada para pedidos pendentes.");
@@ -273,18 +322,24 @@ public class Sistema {
         if (local == null || local.isBlank() || notaFiscal == null || notaFiscal.isBlank()) {
             throw new IllegalArgumentException("Informe o local da coleta e a nota fiscal.");
         }
+        if (destinatario == null || destinatario.isBlank()) {
+            throw new IllegalArgumentException("Informe o nome do destinatário.");
+        }
+        if (seguroContratado && valorSeguro <= 0) {
+            throw new IllegalArgumentException("Informe o valor do seguro (maior que zero).");
+        }
 
         double frete = pedido.getValorFrete();
         ConhecimentoTransporte conhecimento = new ConhecimentoTransporte(
                 proximoNumeroConhecimento++,
                 LocalDate.now(),
                 pedido.getCliente().getPessoa().getNome(),
-                pedido.getContatoNoDestino(),
+                destinatario.trim(),
                 pedido.getDescricaoDaCarga(),
                 (float) frete,
                 (float) (frete * ALIQUOTA_IMPOSTOS),
-                false,   // seguro não contratado por padrão (use setSeguroContratado/setValorSeguro se houver)
-                0f,
+                seguroContratado,
+                (float) (seguroContratado ? valorSeguro : 0),
                 notaFiscal,
                 pedido);
 
@@ -361,11 +416,16 @@ public class Sistema {
         }
 
         double pesoTotal = pedido.getPesoTotal();
+        double volumeTotal = pedido.getVolumeTotal();
         for (PedidoNaRota parada : rota.getPedidos()) {
             pesoTotal += parada.getPedido().getPesoTotal();
+            volumeTotal += parada.getPedido().getVolumeTotal();
         }
         if (pesoTotal > rota.getVeiculoAlocado().getCapacidadeEmQuilos()) {
             throw new IllegalStateException("O peso total excede a capacidade do veículo.");
+        }
+        if (volumeTotal > rota.getVeiculoAlocado().getCapacidadeEmMetroCubicos() + 1e-6) {
+            throw new IllegalStateException("O volume total excede a capacidade (m³) do veículo.");
         }
 
         rota.adicionarPedido(pedido, horarioPrevisto);
@@ -508,6 +568,21 @@ public class Sistema {
     // MANUTENÇÃO E CONSULTAS DA FROTA
     // =====================================================
 
+    // Tira o veículo de circulação: enquanto estiver em manutenção ele não pode ser alocado em rotas.
+    public void enviarParaManutencao (Veiculo veiculo){
+        if (veiculo == null || !veiculos.contains(veiculo)) {
+            throw new IllegalArgumentException("Veículo não cadastrado.");
+        }
+        if (veiculo.getStatusVeiculo() == StatusVeiculo.EM_ROTA) {
+            throw new IllegalStateException("O veículo está em rota.");
+        }
+        if (veiculo.getStatusVeiculo() == StatusVeiculo.EM_MANUTENCAO) {
+            throw new IllegalStateException("O veículo já está em manutenção.");
+        }
+        veiculo.setStatusVeiculo(StatusVeiculo.EM_MANUTENCAO);
+    }
+
+    // Registrar a manutenção realizada conclui o serviço: se o veículo estava em manutenção, volta a ficar disponível.
     public void registrarManutencao (Veiculo veiculo, TipoDeManutencao tipo,String servico, String pecas, String oficina, double valor, LocalDate proximaManutencao){
         if (veiculo == null || !veiculos.contains(veiculo)) {
             throw new IllegalArgumentException("Veículo não cadastrado.");
@@ -526,6 +601,9 @@ public class Sistema {
                 servico, pecas, oficina, valor, proximaManutencao));
         if (proximaManutencao != null) {
             veiculo.setDataProximaManuntencao(proximaManutencao);
+        }
+        if (veiculo.getStatusVeiculo() == StatusVeiculo.EM_MANUTENCAO) {
+            veiculo.setStatusVeiculo(StatusVeiculo.DISPONIVEL);
         }
     }
 
@@ -580,6 +658,13 @@ public class Sistema {
     // Deixa só os dígitos, para "123.456.789-00" e "12345678900" serem o mesmo documento.
     private String normalizar(String documento) {
         return documento == null ? null : documento.replaceAll("\\D", "");
+    }
+
+    private String semAcento(String texto) {
+        if (texto == null) {
+            return "";
+        }
+        return Normalizer.normalize(texto, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase();
     }
 
     private boolean cnhValidaEm(Motorista motorista, LocalDate data) {

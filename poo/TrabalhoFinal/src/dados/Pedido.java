@@ -59,6 +59,7 @@ public class Pedido {
     public void adicionarItem(Item item) {
         itens.add(item);
         pesoTotal += item.getPeso();
+        volumeTotal += item.getDimensao();   // dimensão do item = volume em m³
     }
 
     public void adicionarEvento(EventoDeRastreamento evento) {
@@ -251,5 +252,11 @@ public class Pedido {
 
     public void setFalhasNaEntrega(ArrayList<FalhaNaEntrega> falhasNaEntrega) {
         this.falhasNaEntrega = falhasNaEntrega;
+    }
+
+    // Texto exibido nos combos (ex.: aba Rotas) em vez de "dados.Pedido@228488f2".
+    @Override
+    public String toString() {
+        return "Pedido nº " + numero + " - " + cliente.getPessoa().getNome() + " - " + descricaoDaCarga;
     }
 }

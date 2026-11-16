@@ -1,7 +1,7 @@
 package dados.enums;
 
 public enum TipoDeManutencao {
-    PREVENTINVA ("Preventiva"), CORRETIVA("Corretiva");
+    PREVENTIVA ("Preventiva"), CORRETIVA("Corretiva");
     String tipoDeManutencao;
 
     TipoDeManutencao(String tipoDeManutencao) {

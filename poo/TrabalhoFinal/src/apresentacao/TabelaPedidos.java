@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class TabelaPedidos extends AbstractTableModel {
 
-    private String[] colunas = {"Nº", "Cliente", "Solicitação", "Coleta agendada", "Serviço", "Peso (kg)", "Frete", "Prazo de entrega", "Status"};
+    private String[] colunas = {"Nº", "Cliente", "Solicitação", "Coleta agendada", "Serviço", "Peso (kg)", "Volume (m³)", "Frete", "Prazo de entrega", "Status"};
     private ArrayList<Pedido> pedidos = new ArrayList<>();
 
     public void setPedidos(ArrayList<Pedido> pedidos) {
@@ -53,9 +53,10 @@ public class TabelaPedidos extends AbstractTableModel {
             case 3 -> Conversor.formatar(item.getDataAgendadaPraColeta());
             case 4 -> item.getTipoDeServico();
             case 5 -> item.getPesoTotal();
-            case 6 -> Conversor.moeda(item.getValorFrete());
-            case 7 -> Conversor.formatar(item.getPrazoDeEntrega());
-            case 8 -> item.getStatusPedido();
+            case 6 -> Conversor.numero(item.getVolumeTotal());
+            case 7 -> Conversor.moeda(item.getValorFrete());
+            case 8 -> Conversor.formatar(item.getPrazoDeEntrega());
+            case 9 -> item.getStatusPedido();
             default -> "";
         };
     }

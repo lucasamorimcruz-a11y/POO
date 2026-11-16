@@ -46,4 +46,10 @@ public class Cliente  {
     public void setLimiteDeCredito(double limiteDeCredito) {
         this.limiteDeCredito = limiteDeCredito;
     }
+
+    // Usado pelo JComboBox da aba Pedidos (sem isso aparecia "dados.Cliente@15cb0d85").
+    @Override
+    public String toString() {
+        return pessoa.getNome() + " (" + pessoa.getDocumento() + ")";
+    }
 }

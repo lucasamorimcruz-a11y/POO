@@ -141,4 +141,10 @@ public class Veiculo {
     public int hashCode() {
         return Objects.hash(placa, marca, modelo, anoDeFabricacao, capacidadeEmQuilos, capacidadeEmMetroCubicos, quilometragemAtual, dataDeAquisicao, dataProximaManuntencao, tipoDeVeiculo, statusVeiculo, manutencoes);
     }
+
+    // Texto exibido nos combos (ex.: aba Rotas).
+    @Override
+    public String toString() {
+        return placa + " - " + marca + " " + modelo + " (" + tipoDeVeiculo + ")";
+    }
 }

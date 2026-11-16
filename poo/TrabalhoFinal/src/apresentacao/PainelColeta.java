@@ -17,6 +17,9 @@ public class PainelColeta extends JPanel implements ActionListener {
 
     private JTextField campoLocal = new JTextField(15);
     private JTextField campoNotaFiscal = new JTextField(15);
+    private JTextField campoDestinatario = new JTextField(15);
+    private JCheckBox caixaSeguro = new JCheckBox("Seguro contratado");
+    private JTextField campoValorSeguro = new JTextField(15);
     private JButton botaoRegistrarColeta = new JButton("Registrar coleta");
     private JLabel rotuloConhecimento = new JLabel("Selecione um pedido.");
     private TabelaPedidos modeloTabela = new TabelaPedidos();
@@ -32,6 +35,9 @@ public class PainelColeta extends JPanel implements ActionListener {
                 "Coleta do pedido selecionado (gera o conhecimento de transporte)"));
         Conversor.adicionar(formulario, "Local da coleta:", campoLocal);
         Conversor.adicionar(formulario, "Nota fiscal da mercadoria:", campoNotaFiscal);
+        Conversor.adicionar(formulario, "Destinatário (nome):", campoDestinatario);
+        Conversor.adicionar(formulario, "Seguro:", caixaSeguro);
+        Conversor.adicionar(formulario, "Valor do seguro (R$):", campoValorSeguro);
         Conversor.adicionar(formulario, "", botaoRegistrarColeta);
 
         rotuloConhecimento.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
@@ -50,6 +56,8 @@ public class PainelColeta extends JPanel implements ActionListener {
         add(rolagem, BorderLayout.CENTER);
 
         botaoRegistrarColeta.addActionListener(this);
+        caixaSeguro.addActionListener(this);
+        campoValorSeguro.setEnabled(false);
         tabela.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 mostrarConhecimento();
@@ -81,11 +89,18 @@ public class PainelColeta extends JPanel implements ActionListener {
                 throw new IllegalArgumentException("Selecione um pedido na tabela.");
             }
             Pedido pedido = modeloTabela.getPedido(linha);
+            boolean seguro = caixaSeguro.isSelected();
+            double valorSeguro = seguro ? Conversor.decimal(campoValorSeguro, "Valor do seguro") : 0;
             sistema.registrarColeta(pedido, Conversor.texto(campoLocal, "Local da coleta"),
-                    Conversor.texto(campoNotaFiscal, "Nota fiscal"));
+                    Conversor.texto(campoNotaFiscal, "Nota fiscal"),
+                    Conversor.texto(campoDestinatario, "Destinatário"), seguro, valorSeguro);
             Conversor.info(this, "Coleta registrada e conhecimento de transporte gerado.");
             campoLocal.setText("");
             campoNotaFiscal.setText("");
+            campoDestinatario.setText("");
+            caixaSeguro.setSelected(false);
+            campoValorSeguro.setText("");
+            campoValorSeguro.setEnabled(false);
             atualizar();
             int nova = modeloTabela.getLinha(pedido);
             if (nova >= 0) {
@@ -122,6 +137,11 @@ public class PainelColeta extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent evento) {
         if (evento.getSource() == botaoRegistrarColeta) {
             registrarColeta();
+        } else if (evento.getSource() == caixaSeguro) {
+            campoValorSeguro.setEnabled(caixaSeguro.isSelected());
+            if (!caixaSeguro.isSelected()) {
+                campoValorSeguro.setText("");
+            }
         }
     }
 }

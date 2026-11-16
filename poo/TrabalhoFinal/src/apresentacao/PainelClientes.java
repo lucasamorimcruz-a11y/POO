@@ -63,7 +63,7 @@ public class PainelClientes extends JPanel implements ActionListener {
         norte.add(botoes, BorderLayout.SOUTH);
 
         JPanel busca = new JPanel(new BorderLayout(5, 5));
-        busca.add(new JLabel("Buscar por CPF/CNPJ (vazio = todos):"), BorderLayout.WEST);
+        busca.add(new JLabel("Buscar por nome ou CPF/CNPJ (vazio = todos):"), BorderLayout.WEST);
         busca.add(campoBusca, BorderLayout.CENTER);
         busca.add(botaoBuscar, BorderLayout.EAST);
         Conversor.configurar(tabela);
@@ -82,13 +82,15 @@ public class PainelClientes extends JPanel implements ActionListener {
         botaoCadastrar.addActionListener(this);
         botaoLimpar.addActionListener(this);
         botaoBuscar.addActionListener(this);
+        campoBusca.addActionListener(this);   // Enter no campo de busca também pesquisa
 
         atualizarCampos();
         atualizar();
     }
 
     public void atualizar() {
-        modeloTabela.setClientes(new ArrayList<>(sistema.getClientes()));
+        // Reaplica o texto da busca, para a lista não "voltar" para todos ao trocar de aba.
+        modeloTabela.setClientes(sistema.pesquisarClientes(campoBusca.getText()));
     }
 
     // Habilita só os campos que fazem sentido para o tipo de pessoa e de cliente escolhidos.
@@ -133,6 +135,7 @@ public class PainelClientes extends JPanel implements ActionListener {
             sistema.cadastrarCliente(new Cliente(pessoa, tipo, tabelaPreco, limiteDeCredito));
             Conversor.info(this, "Cliente cadastrado com sucesso.");
             limpar();
+            campoBusca.setText("");   // senão o cliente novo ficaria escondido por um filtro antigo
             atualizar();
         } catch (IllegalArgumentException | IllegalStateException e) {
             Conversor.erro(this, e.getMessage());
@@ -140,19 +143,11 @@ public class PainelClientes extends JPanel implements ActionListener {
     }
 
     private void buscar() {
-        String documento = campoBusca.getText().trim();
-        if (documento.isEmpty()) {
-            atualizar();
-            return;
+        String termo = campoBusca.getText().trim();
+        atualizar();
+        if (!termo.isEmpty() && modeloTabela.getRowCount() == 0) {
+            Conversor.info(this, "Nenhum cliente encontrado para \"" + termo + "\".");
         }
-        Cliente cliente = sistema.buscarCliente(documento);
-        ArrayList<Cliente> resultado = new ArrayList<>();
-        if (cliente == null) {
-            Conversor.info(this, "Nenhum cliente encontrado com este documento.");
-        } else {
-            resultado.add(cliente);
-        }
-        modeloTabela.setClientes(resultado);
     }
 
     private void limpar() {
@@ -177,9 +172,15 @@ public class PainelClientes extends JPanel implements ActionListener {
             cadastrar();
         } else if (fonte == botaoLimpar) {
             limpar();
-        } else if (fonte == botaoBuscar) {
+        } else if (fonte == botaoBuscar || fonte == campoBusca) {
             buscar();
-        } else if (fonte == comboTipoPessoa || fonte == comboTipoCliente) {
+        } else if (fonte == comboTipoCliente) {
+            // Cliente contratado já começa com a tabela padrão preenchida (evita digitar 11 campos do zero).
+            if (comboTipoCliente.getSelectedItem() == TipoCliente.CONTRATADO) {
+                painelTabelaPreco.preencher(sistema.getTabelaPadrao());
+            }
+            atualizarCampos();
+        } else if (fonte == comboTipoPessoa) {
             atualizarCampos();
         }
     }

@@ -42,6 +42,7 @@ public class PainelVeiculos extends JPanel implements ActionListener {
     private JTextField campoValorManutencao = new JTextField(10);
     private JTextField campoProximaData = new JTextField(10);
     private JButton botaoRegistrarManutencao = new JButton("Registrar manutenção");
+    private JButton botaoEnviarManutencao = new JButton("Enviar para manutenção");
 
     private TabelaVeiculos modeloTabela = new TabelaVeiculos();
     private JTable tabela = new JTable(modeloTabela);
@@ -76,6 +77,9 @@ public class PainelVeiculos extends JPanel implements ActionListener {
         Conversor.adicionar(manutencao, "Valor total (R$):", campoValorManutencao);
         Conversor.adicionar(manutencao, "Próxima manutenção:", campoProximaData);
         Conversor.adicionar(manutencao, "", botaoRegistrarManutencao);
+        Conversor.adicionar(manutencao, "", botaoEnviarManutencao);
+        botaoRegistrarManutencao.setToolTipText("Registra o serviço realizado; se o veículo estava em manutenção, ele volta a ficar disponível.");
+        botaoEnviarManutencao.setToolTipText("Muda o status do veículo selecionado para \"em manutenção\" (não pode entrar em rotas).");
 
         JPanel formulario = new JPanel(new GridLayout(1, 2, 5, 5));
         formulario.add(Conversor.topo(cadastro));
@@ -104,6 +108,7 @@ public class PainelVeiculos extends JPanel implements ActionListener {
         botaoManutencaoPendente.addActionListener(this);
         botaoTodos.addActionListener(this);
         botaoRegistrarManutencao.addActionListener(this);
+        botaoEnviarManutencao.addActionListener(this);
 
         atualizar();
     }
@@ -174,6 +179,19 @@ public class PainelVeiculos extends JPanel implements ActionListener {
         }
     }
 
+    private void enviarParaManutencao() {
+        try {
+            int linha = tabela.getSelectedRow();
+            if (linha < 0) {
+                throw new IllegalArgumentException("Selecione um veículo na tabela.");
+            }
+            sistema.enviarParaManutencao(modeloTabela.getVeiculo(linha));
+            atualizar();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            Conversor.erro(this, e.getMessage());
+        }
+    }
+
     private void limpar() {
         campoPlaca.setText("");
         campoMarca.setText("");
@@ -202,6 +220,8 @@ public class PainelVeiculos extends JPanel implements ActionListener {
             atualizar();
         } else if (fonte == botaoRegistrarManutencao) {
             registrarManutencao();
+        } else if (fonte == botaoEnviarManutencao) {
+            enviarParaManutencao();
         }
     }
 }
