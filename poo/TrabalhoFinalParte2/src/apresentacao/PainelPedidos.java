@@ -203,15 +203,10 @@ public class PainelPedidos extends JPanel implements ActionListener {
     private void adicionarItem() {
         try {
             Pedido pedido = pedidoSelecionado();
-            Item item = new Item(Conversor.texto(campoEmbalagem, "Tipo de embalagem"),
-                    (float) Conversor.decimal(campoPesoItem, "Peso"),
-                    (float) Conversor.decimal(campoDimensoes, "Dimensões"),
-                    Conversor.opcional(campoDescricaoItem));
+            Item item = new Item(Conversor.texto(campoEmbalagem, "Tipo de embalagem"), (float) Conversor.decimal(campoPesoItem, "Peso"), (float) Conversor.decimal(campoDimensoes, "Dimensões"), Conversor.opcional(campoDescricaoItem));
             sistema.adicionarItem(pedido, item);
-            campoEmbalagem.setText("");
-            campoPesoItem.setText("");
-            campoDimensoes.setText("");
-            campoDescricaoItem.setText("");
+            campoEmbalagem.setText("");campoPesoItem.setText("");
+            campoDimensoes.setText("");campoDescricaoItem.setText("");
             atualizar();
             selecionar(pedido);
             atualizarItens();

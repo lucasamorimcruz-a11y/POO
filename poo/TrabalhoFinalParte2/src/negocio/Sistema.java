@@ -58,7 +58,7 @@ public class Sistema {
         }
         boolean juridica = pessoa instanceof PessoaJuridica;
         int digitosEsperados = juridica ? 14 : 11;
-        String documento = normalizar(bruto);
+        String documento = filtrar(bruto);
         if (!bruto.matches("[\\d.\\-/\\s]+") || documento.length() != digitosEsperados) {
             throw new IllegalArgumentException((juridica ? "CNPJ" : "CPF") + " inválido: informe " + digitosEsperados + " dígitos.");
         }
@@ -82,7 +82,7 @@ public class Sistema {
         if (motorista == null) {
             throw new IllegalArgumentException("Motorista inválido.");
         }
-        String cpf = normalizar(motorista.getCPF());
+        String cpf = filtrar(motorista.getCPF());
         if (cpf == null || cpf.isEmpty()) {
             throw new IllegalArgumentException("O motorista precisa ter CPF.");
         }
@@ -112,12 +112,12 @@ public class Sistema {
     }
 
     public Cliente buscarCliente (String documento){
-        String alvo = normalizar(documento);
+        String alvo = filtrar(documento);
         if (alvo == null || alvo.isEmpty()) {
             return null;
         }
         for (Cliente cliente : clientes) {
-            if (alvo.equals(normalizar(documentoDe(cliente.getPessoa())))) {
+            if (alvo.equals(filtrar(documentoDe(cliente.getPessoa())))) {
                 return cliente;
             }
         }
@@ -132,7 +132,7 @@ public class Sistema {
             return resultado;
         }
         String buscaTexto = semAcento(texto);
-        String buscaDigitos = normalizar(texto);
+        String buscaDigitos = filtrar(texto);
         for (Cliente cliente : clientes) {
             Pessoa pessoa = cliente.getPessoa();
             boolean achou = semAcento(pessoa.getNome()).contains(buscaTexto);
@@ -140,7 +140,7 @@ public class Sistema {
                 achou = semAcento(juridica.getRazaoSocial()).contains(buscaTexto);
             }
             if (!achou && !buscaDigitos.isEmpty()) {
-                String documento = normalizar(documentoDe(pessoa));
+                String documento = filtrar(documentoDe(pessoa));
                 achou = documento != null && documento.contains(buscaDigitos);
             }
             if (achou) {
@@ -151,12 +151,12 @@ public class Sistema {
     }
 
     public Motorista buscarMotorista (String cpf) {
-        String alvo = normalizar(cpf);
+        String alvo = filtrar(cpf);
         if (alvo == null || alvo.isEmpty()) {
             return null;
         }
         for (Motorista motorista : motoristas) {
-            if (alvo.equals(normalizar(motorista.getCPF()))) {
+            if (alvo.equals(filtrar(motorista.getCPF()))) {
                 return motorista;
             }
         }
@@ -176,6 +176,9 @@ public class Sistema {
     }
 
     public Pedido buscarPedido (int numero){
+        if (numero > pedidos.size()){
+            return null;
+        }
         for (Pedido pedido : pedidos) {
             if (pedido.getNumero() == numero) {
                 return pedido;
@@ -616,8 +619,14 @@ public class Sistema {
         return null;
     }
 
-    private String normalizar(String documento) {
-        return documento == null ? null : documento.replaceAll("\\D", "");
+    private String filtrar (String documento) {
+        if (documento == null){
+            return  null;
+        }
+        else{
+            documento.replaceAll("\\D", "");
+        }
+        return documento;
     }
 
     private String semAcento(String texto) {

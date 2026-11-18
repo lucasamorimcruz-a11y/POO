@@ -142,7 +142,7 @@ public class PainelClientes extends JPanel implements ActionListener {
 
     private void buscar() {
         String termo = campoBusca.getText().trim();
-        atualizar();
+        this.atualizar();
         if (!termo.isEmpty() && modeloTabela.getRowCount() == 0) {
             Conversor.info(this, "Nenhum cliente encontrado para \"" + termo + "\".");
         }
